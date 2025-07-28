@@ -17,10 +17,14 @@ export default function SunPage() {
   const [editPoem, setEditPoem] = useState<Poem | null>(null);
 
   useEffect(() => {
-    fetch('/api/posts?category=sun')
-      .then((res) => res.json())
-      .then(setPoems);
+    fetchPoems();
   }, []);
+
+  const fetchPoems = async () => {
+    const res = await fetch('/api/posts?category=sun');
+    const data = await res.json();
+    setPoems(data);
+  };
 
   const handleAdd = async (title: string, content: string) => {
     await fetch('/api/posts', {
@@ -34,8 +38,7 @@ export default function SunPage() {
       }),
     });
     setOpen(false);
-    const fresh = await fetch('/api/posts?category=sun').then((r) => r.json());
-    setPoems(fresh);
+    fetchPoems();
   };
 
   const handleUpdate = async (id: string, title: string, content: string) => {
@@ -45,8 +48,7 @@ export default function SunPage() {
       body: JSON.stringify({ id, title, content }),
     });
     setEditPoem(null);
-    const fresh = await fetch('/api/posts?category=moon').then((r) => r.json());
-    setPoems(fresh);
+    fetchPoems();
   };
 
   const handleDelete = async (id: string) => {
@@ -56,8 +58,7 @@ export default function SunPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
-    const fresh = await fetch('/api/posts?category=moon').then((r) => r.json());
-    setPoems(fresh);
+    fetchPoems();
   };
 
   return (
@@ -86,11 +87,25 @@ export default function SunPage() {
               <small className='text-gray-500 dark:text-gray-400'>
                 {new Date(p.date).toLocaleString()}
               </small>
+              <div className="mt-2 flex gap-2">
+                <button
+                  className="text-blue-500 hover:underline text-sm"
+                  onClick={() => setEditPoem(p)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="text-red-500 hover:underline text-sm"
+                  onClick={() => handleDelete(p.id)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           ))
         )}
       </div>
-      {/* No Link here—just open the modal */}
+      {/* Add New Poem Button */}
       <button
         onClick={() => setOpen(true)}
         className='fixed bottom-4 right-4 p-4 bg-yellow-400 rounded-full shadow-lg hover:bg-yellow-500 transition'
@@ -100,10 +115,22 @@ export default function SunPage() {
         <Plus size={24} />
       </button>
 
+      {/* Add Modal */}
       <PoemModal
         open={open}
         onClose={() => setOpen(false)}
         onSubmit={handleAdd}
+      />
+
+      {/* Edit Modal */}
+      <PoemModal
+        open={!!editPoem}
+        onClose={() => setEditPoem(null)}
+        onSubmit={(title, content) => {
+          if (editPoem) handleUpdate(editPoem.id, title, content);
+        }}
+        initialTitle={editPoem?.title}
+        initialContent={editPoem?.content}
       />
     </main>
   );
