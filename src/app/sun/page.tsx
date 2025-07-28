@@ -134,7 +134,7 @@ export default function SunPage() {
   const typewriterText = useTypewriter(activePoem?.content || '', true, 32);
 
   return (
-    <main className='min-h-screen bg-gray-50 dark:bg-gray-900'>
+    <main className='min-h-screen'>
       {/* Add new poem button */}
       <button
         onClick={() => setOpen(true)}
@@ -166,12 +166,12 @@ export default function SunPage() {
               }}
             >
               {p?.title && (
-                <h2 className='font-semibold text-3xl mb-6 text-gray-800 dark:text-gray-100'>
+                <h2 className='font-semibold text-3xl mb-6 text-gray-300 dark:text-gray-100'>
                   {p.title}
                 </h2>
               )}
               <p
-                className='text-2xl max-w-2xl text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'
+                className='text-2xl max-w-2xl text-white dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'
                 style={{ minHeight: '8rem' }}
               >
                 {idx === activeIdx ? typewriterText : p?.content}

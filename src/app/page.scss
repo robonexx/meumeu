@@ -1,0 +1,118 @@
+
+$color-dark:  #121212;
+$color-light: #b1b1b1;
+
+$font-display: "Mea Culpa",  cursive;
+$font-body:    "Cormorant",  serif;
+
+$gr-clr-pinkdreams: linear-gradient(to right, #FFA69E, #861657);
+
+// ────────────────────────────────────────────────────────────────
+// SVG art
+// ────────────────────────────────────────────────────────────────
+
+.main {
+    height: 100%;
+min-height: 100svh;
+position: relative;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+.svg {
+  position: absolute;
+  top: 10rem;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(.5);
+
+  width: clamp(160px, 80vw, 300px);
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+
+  z-index: 100;
+
+  svg {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+// ────────────────────────────────────────────────────────────────
+// Buttons
+// ────────────────────────────────────────────────────────────────
+%btn-base { 
+  position: relative;
+  /* left: 50%;
+  transform: translateX(-50%); */
+
+  padding: .6rem 1rem;
+  font-family: inherit;
+  font-size: clamp(0.8rem, 1vw, 1rem);
+  text-transform: uppercase;
+
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  background: rgba(0, 0, 0, .5);
+  color: rgba(226, 226, 226, 0.9);
+  transition: background .3s, color .3s;
+}
+
+
+
+.underlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(99.9deg, rgba(6, 7, 19, 0.56) 21.2%, rgba(20, 4, 34, 0.396) 84.8%);
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.587);
+}
+
+@keyframes star-blink{
+  40% { -webkit-opacity: 0.3; opacity: 0.3;  }
+  90%,100% { -webkit-opacity: 1; opacity: 1; -webkit-transform: scale(1.2); transform: scale(1.2); border-radius: 999999px;}
+}
+
+
+.imageHolder {
+  position: absolute;
+  left: 50%;
+  top: 17.5%;
+  transform: translate(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 360px;
+  width: 360px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #111 0%, #000 100%);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.imageHolder img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 50%;
+  z-index: -1;
+  background: none;
+   transform: scaleX(-1);
+}
