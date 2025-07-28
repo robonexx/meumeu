@@ -11,7 +11,6 @@ interface Poem {
   date: string;
 }
 
-// Typewriter hook (only for the active poem)
 function useTypewriter(text: string, active: boolean, speed = 32) {
   const [displayed, setDisplayed] = useState('');
   useEffect(() => {
@@ -28,7 +27,6 @@ function useTypewriter(text: string, active: boolean, speed = 32) {
   return displayed;
 }
 
-// Shuffle utility
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -44,6 +42,16 @@ export default function SunPage() {
   const [open, setOpen] = useState(false);
   const [editPoem, setEditPoem] = useState<Poem | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [isErika, setIsErika] = useState(false);
+
+  useEffect(() => {
+    // Check user
+    if (typeof window !== 'undefined') {
+      setIsErika(
+        localStorage.getItem('user') === process.env.NEXT_PUBLIC_ERIKA_USER
+      );
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -61,7 +69,6 @@ export default function SunPage() {
     })();
   }, []);
 
-  // Detect visible section using scroll position
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -79,7 +86,6 @@ export default function SunPage() {
     };
   }, []);
 
-  // Refetch and reorder after add/edit/delete
   const refetchPoems = async () => {
     const res = await fetch('/api/posts?category=sun');
     const data: Poem[] = await res.json();
@@ -129,21 +135,22 @@ export default function SunPage() {
     refetchPoems();
   };
 
-  // Only call the typewriter hook for the currently visible poem
   const activePoem = poems[order[activeIdx] ?? 0];
   const typewriterText = useTypewriter(activePoem?.content || '', true, 32);
 
   return (
     <main className='min-h-screen'>
-      {/* Add new poem button */}
-      <button
-        onClick={() => setOpen(true)}
-        className='fixed bottom-4 right-4 p-4 bg-yellow-400 rounded-full shadow-lg hover:bg-yellow-500 transition z-50'
-        title='Add new poem'
-        aria-label='Add new poem'
-      >
-        <Plus size={24} />
-      </button>
+      {/* Only Erika can add */}
+      {isErika && (
+        <button
+          onClick={() => setOpen(true)}
+          className='fixed bottom-4 right-4 p-4 bg-yellow-400 rounded-full shadow-lg hover:bg-yellow-500 transition z-50'
+          title='Add new poem'
+          aria-label='Add new poem'
+        >
+          <Plus size={24} />
+        </button>
+      )}
 
       <div
         ref={containerRef}
@@ -166,12 +173,12 @@ export default function SunPage() {
               }}
             >
               {p?.title && (
-                <h2 className='font-semibold text-3xl mb-6 text-gray-300 dark:text-gray-100'>
+                <h2 className='font-semibold text-3xl mb-6 text-gray-200 dark:text-gray-100'>
                   {p.title}
                 </h2>
               )}
               <p
-                className='text-2xl max-w-2xl text-white dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'
+                className='text-2xl max-w-2xl text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'
                 style={{ minHeight: '8rem' }}
               >
                 {idx === activeIdx ? typewriterText : p?.content}
@@ -179,41 +186,48 @@ export default function SunPage() {
               <small className='text-gray-500 dark:text-gray-400 block mb-8'>
                 {p && new Date(p.date).toLocaleString()}
               </small>
-              <div className='flex gap-3'>
-                <button
-                  className='text-blue-500 underline text-lg'
-                  onClick={() => setEditPoem(p)}
-                >
-                  Edit
-                </button>
-                <button
-                  className='text-red-500 underline text-lg'
-                  onClick={() => p && handleDelete(p.id)}
-                >
-                  Delete
-                </button>
-              </div>
+              {/* Only Erika can edit/delete */}
+              {isErika && (
+                <div className='flex gap-3'>
+                  <button
+                    className='text-blue-500 underline text-lg'
+                    onClick={() => setEditPoem(p)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className='text-red-500 underline text-lg'
+                    onClick={() => p && handleDelete(p.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </section>
           );
         })}
       </div>
 
       {/* Add Modal */}
-      <PoemModal
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={handleAdd}
-      />
+      {isErika && (
+        <PoemModal
+          open={open}
+          onClose={() => setOpen(false)}
+          onSubmit={handleAdd}
+        />
+      )}
       {/* Edit Modal */}
-      <PoemModal
-        open={!!editPoem}
-        onClose={() => setEditPoem(null)}
-        onSubmit={(title, content) => {
-          if (editPoem) handleUpdate(editPoem.id, title, content);
-        }}
-        initialTitle={editPoem?.title}
-        initialContent={editPoem?.content}
-      />
+      {isErika && (
+        <PoemModal
+          open={!!editPoem}
+          onClose={() => setEditPoem(null)}
+          onSubmit={(title, content) => {
+            if (editPoem) handleUpdate(editPoem.id, title, content);
+          }}
+          initialTitle={editPoem?.title}
+          initialContent={editPoem?.content}
+        />
+      )}
     </main>
   );
 }

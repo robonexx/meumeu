@@ -62,7 +62,7 @@ export default function PoemModal({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+              className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded text-black"
             >
               Cancel
             </button>

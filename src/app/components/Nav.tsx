@@ -11,16 +11,16 @@ export default function Nav() {
       </Link>
       <div className='flex flex-col sm:flex-row gap-6 align-center justify-center'>
         <Link
-          href='/sun'
-          className='px-8 py-4 bg-[goldenrod] dark:bg-[gold] text-yellow-900 dark:text-yellow-900 rounded-lg shadow-lg hover:bg-[gold] dark:hover:bg-yellow-600 transition'
-        >
-          Sun
-        </Link>
-        <Link
           href='/moon'
           className='px-8 py-4 bg-gray-800 dark:bg-gray-700 text-white rounded-lg shadow-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition'
         >
           Moon
+        </Link>
+        <Link
+          href='/sun'
+          className='px-8 py-4 bg-[goldenrod] dark:bg-[gold] text-yellow-900 dark:text-yellow-900 rounded-lg shadow-lg hover:bg-[gold] dark:hover:bg-yellow-600 transition'
+        >
+          Sun
         </Link>
         <Link
           href='/gallery'

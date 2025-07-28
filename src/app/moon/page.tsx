@@ -36,12 +36,22 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-export default function MoonFullPage() {
+export default function MoonPage() {
   const [poems, setPoems] = useState<Poem[]>([]);
   const [order, setOrder] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
   const [editPoem, setEditPoem] = useState<Poem | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+  const [isRob, setIsRob] = useState(false);
+
+  useEffect(() => {
+    // Check user
+    if (typeof window !== 'undefined') {
+      setIsRob(
+        localStorage.getItem('user') === process.env.NEXT_PUBLIC_ROB_USER
+      );
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -59,7 +69,6 @@ export default function MoonFullPage() {
     })();
   }, []);
 
-  // Detect visible section using scroll position
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -77,7 +86,6 @@ export default function MoonFullPage() {
     };
   }, []);
 
-  // Refetch and reorder after add/edit/delete
   const refetchPoems = async () => {
     const res = await fetch('/api/posts?category=moon');
     const data: Poem[] = await res.json();
@@ -127,28 +135,29 @@ export default function MoonFullPage() {
     refetchPoems();
   };
 
-  // --- Fix: Only call useTypewriter ONCE for the active poem ---
   const activePoem = poems[order[activeIdx] ?? 0];
   const typewriterText = useTypewriter(activePoem?.content || '', true, 32);
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Add new poem button */}
-      <button
-        onClick={() => setOpen(true)}
-        className='fixed bottom-4 right-4 p-4 bg-gray-700 text-white rounded-full shadow-lg hover:bg-gray-600 transition z-50'
-        title='Add new poem'
-        aria-label='Add new poem'
-      >
-        <Plus size={24} />
-      </button>
+    <main className='min-h-screen'>
+      {/* Only Rob can add */}
+      {isRob && (
+        <button
+          onClick={() => setOpen(true)}
+          className='fixed bottom-4 right-4 p-4 bg-gray-700 text-white rounded-full shadow-lg hover:bg-gray-600 transition z-50'
+          title='Add new poem'
+          aria-label='Add new poem'
+        >
+          <Plus size={24} />
+        </button>
+      )}
 
       <div
         ref={containerRef}
-        className="w-screen h-screen overflow-y-scroll"
+        className='w-screen h-screen overflow-y-scroll'
         style={{
           scrollSnapType: 'y mandatory',
-          height: '100vh'
+          height: '100vh',
         }}
       >
         {order.map((poemIdx, idx) => {
@@ -164,52 +173,61 @@ export default function MoonFullPage() {
               }}
             >
               {p?.title && (
-                <h2 className='font-semibold text-3xl mb-6 text-gray-800 dark:text-gray-100'>
+                <h2 className='font-semibold text-3xl mb-6 text-gray-200 dark:text-gray-100'>
                   {p.title}
                 </h2>
               )}
-              <p className='text-2xl max-w-2xl text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6' style={{minHeight: '8rem'}}>
-                {/* Only show typewriter text for the active poem, else full content */}
+              <p
+                className='text-2xl max-w-2xl text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'
+                style={{ minHeight: '8rem' }}
+              >
                 {idx === activeIdx ? typewriterText : p?.content}
               </p>
               <small className='text-gray-500 dark:text-gray-400 block mb-8'>
                 {p && new Date(p.date).toLocaleString()}
               </small>
-              <div className="flex gap-3">
-                <button
-                  className="text-blue-500 underline text-lg"
-                  onClick={() => setEditPoem(p)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="text-red-500 underline text-lg"
-                  onClick={() => p && handleDelete(p.id)}
-                >
-                  Delete
-                </button>
-              </div>
+              {/* Only Rob can edit/delete */}
+              {isRob && (
+                <div className='flex gap-3'>
+                  <button
+                    className='text-blue-500 underline text-lg'
+                    onClick={() => setEditPoem(p)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className='text-red-500 underline text-lg'
+                    onClick={() => p && handleDelete(p.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
             </section>
           );
         })}
       </div>
 
       {/* Add Modal */}
-      <PoemModal
-        open={open}
-        onClose={() => setOpen(false)}
-        onSubmit={handleAdd}
-      />
+      {isRob && (
+        <PoemModal
+          open={open}
+          onClose={() => setOpen(false)}
+          onSubmit={handleAdd}
+        />
+      )}
       {/* Edit Modal */}
-      <PoemModal
-        open={!!editPoem}
-        onClose={() => setEditPoem(null)}
-        onSubmit={(title, content) => {
-          if (editPoem) handleUpdate(editPoem.id, title, content);
-        }}
-        initialTitle={editPoem?.title}
-        initialContent={editPoem?.content}
-      />
+      {isRob && (
+        <PoemModal
+          open={!!editPoem}
+          onClose={() => setEditPoem(null)}
+          onSubmit={(title, content) => {
+            if (editPoem) handleUpdate(editPoem.id, title, content);
+          }}
+          initialTitle={editPoem?.title}
+          initialContent={editPoem?.content}
+        />
+      )}
     </main>
   );
 }
