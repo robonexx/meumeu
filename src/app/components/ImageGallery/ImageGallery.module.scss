@@ -6,6 +6,7 @@ $light-gold: #B8A054;
   font-family: var(--font-playfair);
   color: #f8f8f8;
   font-size: 1.25rem;
+  height: fit-content;
 
   @media (max-width: 768px) {
     padding: 1rem;

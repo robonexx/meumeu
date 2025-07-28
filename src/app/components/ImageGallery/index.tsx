@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useRef, useState, useEffect, Suspense } from 'react';
 import {
   RiCloseFill,
   RiArrowRightCircleLine,
@@ -22,18 +22,25 @@ const ImageGallery = () => {
   const [images, setImages] = useState<CloudinaryImage[]>([]);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Fetch images from the API
   const fetchImages = async () => {
     const res = await fetch('/api/gallery');
     const data = await res.json();
-    setImages(data);
+    setImages([...data].reverse());
   };
 
   useEffect(() => {
     fetchImages();
   }, []);
 
-  // Upload handler
+  // Open file dialog
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // Handle file upload
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -43,6 +50,8 @@ const ImageGallery = () => {
     await fetch('/api/upload', { method: 'POST', body: formData });
     setUploading(false);
     fetchImages();
+    // Reset the input so you can re-upload the same file if you want
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   // Delete handler
@@ -72,25 +81,36 @@ const ImageGallery = () => {
 
   return (
     <div className={styles.galleryWrapper}>
-      {/*  <h2 className={styles.title}>Gallery</h2> */}
-      <p className='text-black text-center'>
+      <h2 className={styles.title}>Gallery</h2>
+      <p>
         I keep our memories close, like folded letters in my chest... quiet,
         warm, close to my heart.
       </p>
 
       {/* Upload Button */}
-      <label className='inline-flex items-center gap-2 mb-4 cursor-pointer'>
-        <RiUploadCloud2Line size={26} />
-        <span>Upload Image</span>
+      <div className="mb-4">
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition"
+          onClick={handleButtonClick}
+          disabled={uploading}
+          aria-label="Upload image"
+          title="Upload image"
+        >
+          <RiUploadCloud2Line size={24} />
+          {uploading ? 'Uploading...' : 'Upload Image'}
+        </button>
         <input
-          type='file'
-          accept='image/*'
-          className='hidden'
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
           onChange={handleUpload}
           disabled={uploading}
+          title="Upload image"
+          placeholder="Choose an image to upload"
         />
-        {uploading && <span className='ml-2 text-sm'>Uploading...</span>}
-      </label>
+      </div>
 
       {/* Masonry List */}
       <div className={styles.masonryList}>
@@ -100,7 +120,6 @@ const ImageGallery = () => {
             className={styles.masonryItem}
             onClick={() => openLightbox(index)}
           >
-            {/* Next Image for layout, fallback to <img> if you want */}
             <Image
               src={img.secure_url}
               alt={`Gallery ${index}`}
@@ -141,9 +160,9 @@ const ImageGallery = () => {
               <button
                 className={styles.closeButton}
                 onClick={closeLightbox}
-                type='button'
-                aria-label='Close lightbox'
-                title='Close'
+                type="button"
+                aria-label="Close lightbox"
+                title="Close"
               >
                 <RiCloseFill />
               </button>
@@ -151,9 +170,9 @@ const ImageGallery = () => {
               <button
                 className={styles.prevButton}
                 onClick={showPrev}
-                type='button'
-                aria-label='Previous image'
-                title='Previous image'
+                type="button"
+                aria-label="Previous image"
+                title="Previous image"
               >
                 <RiArrowLeftCircleLine />
               </button>
@@ -161,18 +180,19 @@ const ImageGallery = () => {
               <button
                 className={styles.nextButton}
                 onClick={showNext}
-                type='button'
-                aria-label='Next image'
-                title='Next image'
+                type="button"
+                aria-label="Next image"
+                title="Next image"
               >
                 <RiArrowRightCircleLine />
               </button>
               {/* Delete */}
               <button
                 className={`${styles.closeButton} !right-16 !top-3`}
-                title='Delete'
+                title="Delete"
+                aria-label="Delete image"
                 onClick={() => handleDelete(images[selectedIndex].public_id)}
-                type='button'
+                type="button"
               >
                 <RiDeleteBin6Line />
               </button>

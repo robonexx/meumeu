@@ -15,7 +15,7 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #3f3f3f;
   }
 }
 
@@ -24,15 +24,12 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: var(--background);
+  background-color: black;
+  background-size: cover;
+  background-repeat: no-repeat;
   color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
 }
 .snap-start {
   scroll-snap-align: start;
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
