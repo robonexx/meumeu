@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Plus } from 'lucide-react';
 import PoemModal from '../components/PoemModal';
 
@@ -11,19 +11,87 @@ interface Poem {
   date: string;
 }
 
+// Typewriter hook (only for the active poem)
+function useTypewriter(text: string, active: boolean, speed = 32) {
+  const [displayed, setDisplayed] = useState('');
+  useEffect(() => {
+    if (!active) return setDisplayed('');
+    setDisplayed('');
+    let i = 0;
+    const interval = setInterval(() => {
+      setDisplayed(text.slice(0, i + 1));
+      i++;
+      if (i >= text.length) clearInterval(interval);
+    }, speed);
+    return () => clearInterval(interval);
+  }, [text, active, speed]);
+  return displayed;
+}
+
+// Shuffle utility
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export default function SunPage() {
   const [poems, setPoems] = useState<Poem[]>([]);
+  const [order, setOrder] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
   const [editPoem, setEditPoem] = useState<Poem | null>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
 
   useEffect(() => {
-    fetchPoems();
+    (async () => {
+      const res = await fetch('/api/posts?category=sun');
+      const data: Poem[] = await res.json();
+      setPoems(data);
+      if (data.length) {
+        const arr: number[] = data.map((_, i) => i);
+        if (arr.length > 1) {
+          setOrder([0, ...shuffle(arr.slice(1))]);
+        } else {
+          setOrder(arr);
+        }
+      }
+    })();
   }, []);
 
-  const fetchPoems = async () => {
+  // Detect visible section using scroll position
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function onScroll() {
+      const container = containerRef.current;
+      if (!container) return;
+      const { scrollTop, clientHeight } = container;
+      const idx = Math.round(scrollTop / clientHeight);
+      setActiveIdx(idx);
+    }
+    const el = containerRef.current;
+    if (el) el.addEventListener('scroll', onScroll);
+    return () => {
+      if (el) el.removeEventListener('scroll', onScroll);
+    };
+  }, []);
+
+  // Refetch and reorder after add/edit/delete
+  const refetchPoems = async () => {
     const res = await fetch('/api/posts?category=sun');
-    const data = await res.json();
+    const data: Poem[] = await res.json();
     setPoems(data);
+    if (data.length) {
+      const arr: number[] = data.map((_, i) => i);
+      if (arr.length > 1) {
+        setOrder([0, ...shuffle(arr.slice(1))]);
+      } else {
+        setOrder(arr);
+      }
+    }
   };
 
   const handleAdd = async (title: string, content: string) => {
@@ -38,7 +106,7 @@ export default function SunPage() {
       }),
     });
     setOpen(false);
-    fetchPoems();
+    refetchPoems();
   };
 
   const handleUpdate = async (id: string, title: string, content: string) => {
@@ -48,7 +116,7 @@ export default function SunPage() {
       body: JSON.stringify({ id, title, content }),
     });
     setEditPoem(null);
-    fetchPoems();
+    refetchPoems();
   };
 
   const handleDelete = async (id: string) => {
@@ -58,62 +126,77 @@ export default function SunPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id }),
     });
-    fetchPoems();
+    refetchPoems();
   };
 
-  return (
-    <main className='min-h-screen p-8 bg-gray-50 dark:bg-gray-900'>
-      <h1 className='text-3xl text-center font-bold mb-6 text-gray-800 dark:text-gray-100'>
-        Sun Poems
-      </h1>
+  // Only call the typewriter hook for the currently visible poem
+  const activePoem = poems[order[activeIdx] ?? 0];
+  const typewriterText = useTypewriter(activePoem?.content || '', true, 32);
 
-      <div className='lg:w-2/4 mx-auto sm:w-3/4'>
-        {poems.length === 0 ? (
-          <p className='text-gray-600 dark:text-gray-400'>No poems yet.</p>
-        ) : (
-          poems.map((p) => (
-            <div
-              key={p.id}
-              className='mb-4 bg-white dark:bg-gray-800 p-4 rounded shadow'
-            >
-              {p.title && (
-                <h2 className='font-semibold text-xl text-gray-800 dark:text-gray-100'>
-                  {p.title}
-                </h2>
-              )}
-              <p className='mt-2 text-gray-700 dark:text-gray-200'>
-                {p.content}
-              </p>
-              <small className='text-gray-500 dark:text-gray-400'>
-                {new Date(p.date).toLocaleString()}
-              </small>
-              <div className="mt-2 flex gap-2">
-                <button
-                  className="text-blue-500 hover:underline text-sm"
-                  onClick={() => setEditPoem(p)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="text-red-500 hover:underline text-sm"
-                  onClick={() => handleDelete(p.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
-      {/* Add New Poem Button */}
+  return (
+    <main className='min-h-screen bg-gray-50 dark:bg-gray-900'>
+      {/* Add new poem button */}
       <button
         onClick={() => setOpen(true)}
-        className='fixed bottom-4 right-4 p-4 bg-yellow-400 rounded-full shadow-lg hover:bg-yellow-500 transition'
+        className='fixed bottom-4 right-4 p-4 bg-yellow-400 rounded-full shadow-lg hover:bg-yellow-500 transition z-50'
         title='Add new poem'
         aria-label='Add new poem'
       >
         <Plus size={24} />
       </button>
+
+      <div
+        ref={containerRef}
+        className='w-screen h-screen overflow-y-scroll'
+        style={{
+          scrollSnapType: 'y mandatory',
+          height: '100vh',
+        }}
+      >
+        {order.map((poemIdx, idx) => {
+          const p = poems[poemIdx];
+          return (
+            <section
+              key={p?.id || idx}
+              className='w-full h-screen flex flex-col justify-center items-center snap-start'
+              style={{
+                minHeight: '100vh',
+                scrollSnapAlign: 'start',
+                padding: '2rem',
+              }}
+            >
+              {p?.title && (
+                <h2 className='font-semibold text-3xl mb-6 text-gray-800 dark:text-gray-100'>
+                  {p.title}
+                </h2>
+              )}
+              <p
+                className='text-2xl max-w-2xl text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'
+                style={{ minHeight: '8rem' }}
+              >
+                {idx === activeIdx ? typewriterText : p?.content}
+              </p>
+              <small className='text-gray-500 dark:text-gray-400 block mb-8'>
+                {p && new Date(p.date).toLocaleString()}
+              </small>
+              <div className='flex gap-3'>
+                <button
+                  className='text-blue-500 underline text-lg'
+                  onClick={() => setEditPoem(p)}
+                >
+                  Edit
+                </button>
+                <button
+                  className='text-red-500 underline text-lg'
+                  onClick={() => p && handleDelete(p.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </section>
+          );
+        })}
+      </div>
 
       {/* Add Modal */}
       <PoemModal
@@ -121,7 +204,6 @@ export default function SunPage() {
         onClose={() => setOpen(false)}
         onSubmit={handleAdd}
       />
-
       {/* Edit Modal */}
       <PoemModal
         open={!!editPoem}
