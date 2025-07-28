@@ -178,7 +178,7 @@ export default function MoonPage() {
                 </h2>
               )}
               <p
-                className='text-2xl max-w-2xl text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-2 md:mb-6'
+                className='md:text-2xl text-lg max-w-2xl text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-2 md:mb-6'
                 style={{ minHeight: '8rem' }}
               >
                 {idx === activeIdx ? typewriterText : p?.content}
