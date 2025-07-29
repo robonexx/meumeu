@@ -114,6 +114,8 @@ const ImageGallery = () => {
           disabled={uploading}
           accept='image/*'
           className='hidden'
+          title='Upload image'
+          placeholder='Select an image to upload'
         />
       </div>
 
