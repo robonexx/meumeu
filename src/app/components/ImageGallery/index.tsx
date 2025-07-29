@@ -1,3 +1,4 @@
+// app/components/ImageGallery.tsx
 'use client';
 import React, { useRef, useState, useEffect, Suspense } from 'react';
 import {
@@ -41,25 +42,21 @@ const ImageGallery = () => {
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
-    if (!file) {
-      alert('No file selected.');
-      return;
-    }
-
-    if (!file.type.startsWith('image/')) {
-      alert('Please select a valid image file.');
-      return;
-    }
+    if (!file) return alert('No file selected.');
+    if (!file.type.startsWith('image/')) return alert('Invalid image format.');
 
     try {
       setUploading(true);
-
       const compressedFile = await imageCompression(file, {
         maxSizeMB: 2.5,
         maxWidthOrHeight: 1920,
         useWebWorker: true,
       });
+
+      console.log(
+        `Original: ${(file.size / 1024 / 1024).toFixed(2)}MB`,
+        `Compressed: ${(compressedFile.size / 1024 / 1024).toFixed(2)}MB`
+      );
 
       const formData = new FormData();
       formData.append('file', compressedFile);
@@ -69,18 +66,25 @@ const ImageGallery = () => {
         body: formData,
       });
 
-      const result = await res.json();
+      let result;
+      try {
+        result = await res.json();
+      } catch (err) {
+        setUploading(false);
+        return alert('Invalid server response. Upload failed.');
+      }
 
       if (!res.ok) {
         console.error('Upload error:', result);
-        throw new Error(result?.error || 'Upload failed');
+        setUploading(false);
+        return alert(result?.error || 'Upload failed');
       }
 
       await fetchImages();
       alert('Upload successful!');
     } catch (err) {
       console.error('Upload error:', err);
-      alert('Image upload failed. Please try again.');
+      alert('Upload failed. Please try again.');
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -98,9 +102,6 @@ const ImageGallery = () => {
     fetchImages();
   };
 
-  const openLightbox = (index: number) => setSelectedIndex(index);
-  const closeLightbox = () => setSelectedIndex(null);
-
   const showPrev = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev! - 1));
@@ -115,19 +116,15 @@ const ImageGallery = () => {
     <div className={styles.galleryWrapper}>
       <h2 className={styles.title}>Gallery</h2>
       <p className='text-center'>
-        I keep our memories close, like folded letters in my chest... quiet,
-        warm, close to my heart.
+        I keep our memories close, like folded letters in my chest...
       </p>
 
-      {/* Upload Button */}
       <div className='mb-4'>
         <button
           type='button'
           className='inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition'
           onClick={handleButtonClick}
           disabled={uploading}
-          aria-label='Upload image'
-          title='Upload image'
         >
           <RiUploadCloud2Line size={24} />
           {uploading ? 'Uploading...' : 'Upload Image'}
@@ -139,20 +136,17 @@ const ImageGallery = () => {
           className='hidden'
           onChange={handleUpload}
           disabled={uploading}
-          title='Select image to upload'
+          title='Select an image to upload'
+          placeholder='Select image'
         />
-        {uploading && (
-          <p className='text-sm mt-2 text-gray-600'>Uploading...</p>
-        )}
       </div>
 
-      {/* Masonry List */}
       <div className={styles.masonryList}>
         {images.map((img, index) => (
           <div
             key={img.public_id}
             className={styles.masonryItem}
-            onClick={() => openLightbox(index)}
+            onClick={() => setSelectedIndex(index)}
           >
             <Image
               src={img.secure_url}
@@ -166,12 +160,11 @@ const ImageGallery = () => {
         ))}
       </div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {selectedIndex !== null && (
           <motion.div
             className={styles.lightbox}
-            onClick={closeLightbox}
+            onClick={() => setSelectedIndex(null)}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -188,46 +181,39 @@ const ImageGallery = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.4 }}
             >
-              {/* Close */}
               <button
+                onClick={() => setSelectedIndex(null)}
                 className={styles.closeButton}
-                onClick={closeLightbox}
-                type='button'
-                aria-label='Close lightbox'
+                title="Close"
+                aria-label="Close"
               >
                 <RiCloseFill />
               </button>
-              {/* Prev */}
               <button
-                className={styles.prevButton}
                 onClick={showPrev}
-                type='button'
-                aria-label='Previous image'
+                className={styles.prevButton}
+                title="Previous image"
+                aria-label="Previous image"
               >
                 <RiArrowLeftCircleLine />
               </button>
-              {/* Next */}
               <button
-                className={styles.nextButton}
                 onClick={showNext}
-                type='button'
-                aria-label='Next image'
+                className={styles.nextButton}
+                title="Next image"
+                aria-label="Next image"
               >
                 <RiArrowRightCircleLine />
               </button>
-              {/* Delete */}
               <button
                 className={`${styles.closeButton} !right-16 !top-3`}
-                title='Delete'
-                aria-label='Delete image'
                 onClick={() => handleDelete(images[selectedIndex].public_id)}
-                type='button'
+                title="Delete image"
+                aria-label="Delete image"
               >
                 <RiDeleteBin6Line />
               </button>
-              {/* Image */}
               <Suspense fallback={<div>Loading...</div>}>
                 <Image
                   src={images[selectedIndex].secure_url}
@@ -247,3 +233,4 @@ const ImageGallery = () => {
 };
 
 export default ImageGallery;
+

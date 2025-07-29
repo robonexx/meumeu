@@ -1,6 +1,4 @@
 // app/api/upload/route.ts
-export const runtime = 'nodejs';
-
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
@@ -14,30 +12,40 @@ cloudinary.config({
 export async function POST(request: Request) {
   const formData = await request.formData();
   const file = formData.get('file') as File;
-
-  if (!file) {
+  if (!file)
     return NextResponse.json({ error: 'No file provided' }, { status: 400 });
-  }
 
   const arrayBuffer = await file.arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
   const stream = Readable.from(buffer);
 
-  try {
-    const uploadResult = await new Promise((resolve, reject) => {
+  const uploadWithTimeout = (stream: Readable, timeout = 10000) => {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(
+        () => reject(new Error('Upload timeout')),
+        timeout
+      );
+
       const cloudinaryStream = cloudinary.uploader.upload_stream(
         { folder: 'meumeu' },
         (error, result) => {
-          if (error || !result) return reject(error);
-          resolve(result);
+          clearTimeout(timer);
+          if (error || !result) reject(error);
+          else resolve(result);
         }
       );
+
       stream.pipe(cloudinaryStream);
     });
+  };
 
+  try {
+    const uploadResult = await uploadWithTimeout(stream);
     return NextResponse.json(uploadResult);
   } catch (err) {
-    console.error('Cloudinary upload error:', err);
-    return NextResponse.json({ error: 'Upload failed', details: err }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Upload failed', details: err },
+      { status: 500 }
+    );
   }
 }
