@@ -143,6 +143,7 @@ const ImageGallery = () => {
           className='hidden'
           onChange={handleUpload}
           disabled={uploading}
+          title='Select image to upload'
         />
         {uploading && <p className='text-sm mt-2 text-gray-600'>Uploading...</p>}
       </div>
