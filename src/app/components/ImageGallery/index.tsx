@@ -9,6 +9,7 @@ import {
 } from 'react-icons/ri';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import imageCompression from 'browser-image-compression';
 import styles from './ImageGallery.module.scss';
 
 interface CloudinaryImage {
@@ -51,22 +52,17 @@ const ImageGallery = () => {
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      alert('Image is too large. Max 10MB allowed.');
-      return;
-    }
-
     try {
       setUploading(true);
 
-      const formData = new FormData();
-      formData.append('file', file);
+      const compressedFile = await imageCompression(file, {
+        maxSizeMB: 2.5,
+        maxWidthOrHeight: 1920,
+        useWebWorker: true,
+      });
 
-      if (process.env.NODE_ENV === 'development') {
-        for (const [key, value] of formData.entries()) {
-          console.log(`${key}:`, value);
-        }
-      }
+      const formData = new FormData();
+      formData.append('file', compressedFile);
 
       const res = await fetch('/api/upload', {
         method: 'POST',

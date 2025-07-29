@@ -1,4 +1,6 @@
 // app/api/upload/route.ts
+export const runtime = 'nodejs';
+
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
@@ -12,13 +14,13 @@ cloudinary.config({
 export async function POST(request: Request) {
   const formData = await request.formData();
   const file = formData.get('file') as File;
+
   if (!file) {
     return NextResponse.json({ error: 'No file provided' }, { status: 400 });
   }
 
   const arrayBuffer = await file.arrayBuffer();
   const buffer = new Uint8Array(arrayBuffer);
-
   const stream = Readable.from(buffer);
 
   try {
@@ -26,8 +28,8 @@ export async function POST(request: Request) {
       const cloudinaryStream = cloudinary.uploader.upload_stream(
         { folder: 'meumeu' },
         (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
+          if (error || !result) return reject(error);
+          resolve(result);
         }
       );
       stream.pipe(cloudinaryStream);
@@ -35,6 +37,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(uploadResult);
   } catch (err) {
+    console.error('Cloudinary upload error:', err);
     return NextResponse.json({ error: 'Upload failed', details: err }, { status: 500 });
   }
 }

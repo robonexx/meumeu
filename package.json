@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
+    "browser-image-compression": "^2.0.2",
     "cloudinary": "^2.7.0",
     "framer-motion": "^12.23.11",
     "gsap": "^3.13.0",
