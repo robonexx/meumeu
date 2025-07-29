@@ -1,4 +1,4 @@
-// app/api/upload/route.ts
+// ✅ app/api/upload/route.ts (Server-side API Route)
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
@@ -10,23 +10,23 @@ cloudinary.config({
 });
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
-  const file = formData.get('file') as File;
-  if (!file) {
-    return NextResponse.json({ error: 'No file provided' }, { status: 400 });
-  }
-
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = new Uint8Array(arrayBuffer);
-
-  const stream = Readable.from(buffer);
-
   try {
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
+
+    if (!file) {
+      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+    const stream = Readable.from(buffer);
+
     const uploadResult = await new Promise((resolve, reject) => {
       const cloudinaryStream = cloudinary.uploader.upload_stream(
         { folder: 'meumeu' },
         (error, result) => {
-          if (error) reject(error);
+          if (error || !result) reject(error);
           else resolve(result);
         }
       );
