@@ -38,65 +38,57 @@ function shuffle<T>(arr: T[]): T[] {
 
 export default function MoonPage() {
   const [poems, setPoems] = useState<Poem[]>([]);
-  const [order, setOrder] = useState<number[]>([]);
   const [open, setOpen] = useState(false);
   const [editPoem, setEditPoem] = useState<Poem | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isRob, setIsRob] = useState(false);
 
-  useEffect(() => {
-    // Check user
-    if (typeof window !== 'undefined') {
-      setIsRob(
-        localStorage.getItem('user') === process.env.NEXT_PUBLIC_ROB_USER
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/posts?category=moon');
-      const data: Poem[] = await res.json();
-      setPoems(data);
-      if (data.length) {
-        const arr: number[] = data.map((_, i) => i);
-        if (arr.length > 1) {
-          setOrder([0, ...shuffle(arr.slice(1))]);
-        } else {
-          setOrder(arr);
-        }
-      }
-    })();
-  }, []);
-
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    function onScroll() {
+    if (typeof window !== 'undefined') {
+      setIsRob(localStorage.getItem('user') === process.env.NEXT_PUBLIC_ROB_USER);
+    }
+  }, []);
+
+  useEffect(() => {
+    const fetchPoems = async () => {
+      const res = await fetch('/api/posts?category=moon');
+      const data: Poem[] = await res.json();
+
+      if (data.length) {
+        const sorted = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        const [latest, ...rest] = sorted;
+        const shuffledRest = shuffle(rest);
+        setPoems([latest, ...shuffledRest]);
+      }
+    };
+    fetchPoems();
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
       const container = containerRef.current;
       if (!container) return;
-      const { scrollTop, clientHeight } = container;
-      const idx = Math.round(scrollTop / clientHeight);
+      const { scrollLeft, clientWidth } = container;
+      const idx = Math.round(scrollLeft / clientWidth);
       setActiveIdx(idx);
-    }
+    };
+
     const el = containerRef.current;
     if (el) el.addEventListener('scroll', onScroll);
-    return () => {
-      if (el) el.removeEventListener('scroll', onScroll);
-    };
+    return () => el?.removeEventListener('scroll', onScroll);
   }, []);
 
   const refetchPoems = async () => {
     const res = await fetch('/api/posts?category=moon');
     const data: Poem[] = await res.json();
-    setPoems(data);
+
     if (data.length) {
-      const arr: number[] = data.map((_, i) => i);
-      if (arr.length > 1) {
-        setOrder([0, ...shuffle(arr.slice(1))]);
-      } else {
-        setOrder(arr);
-      }
+      const sorted = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      const [latest, ...rest] = sorted;
+      const shuffledRest = shuffle(rest);
+      setPoems([latest, ...shuffledRest]);
     }
   };
 
@@ -135,12 +127,11 @@ export default function MoonPage() {
     refetchPoems();
   };
 
-  const activePoem = poems[order[activeIdx] ?? 0];
+  const activePoem = poems[activeIdx];
   const typewriterText = useTypewriter(activePoem?.content || '', true, 32);
 
   return (
-    <main className='min-h-screen'>
-      {/* Only Rob can add */}
+    <main className='min-h-screen bg-black text-white'>
       {isRob && (
         <button
           onClick={() => setOpen(true)}
@@ -154,41 +145,28 @@ export default function MoonPage() {
 
       <div
         ref={containerRef}
-        className='w-screen h-screen overflow-y-scroll'
-        style={{
-          scrollSnapType: 'y mandatory',
-          height: '100vh',
-        }}
+        className='flex overflow-x-auto snap-x snap-mandatory w-screen h-screen'
+        style={{ scrollBehavior: 'smooth' }}
       >
-        {order.map((poemIdx, idx) => {
-          const p = poems[poemIdx];
-          return (
-            <section
-              key={p?.id || idx}
-              className='w-full h-screen flex flex-col justify-center items-center snap-start'
-              style={{
-                minHeight: '100vh',
-                scrollSnapAlign: 'start',
-                padding: '2rem',
-              }}
-            >
-              {p?.title && (
+        {poems.map((p, idx) => (
+          <div
+            key={p.id || idx}
+            className='snap-start min-w-full h-screen overflow-y-auto px-4 py-20 flex-shrink-0'
+          >
+            <div className='max-w-2xl mx-auto text-center'>
+              {/* {p.title && (
                 <h2 className='font-semibold text-3xl mb-6 text-gray-200 dark:text-gray-100'>
                   {p.title}
                 </h2>
-              )}
-              <p
-                className='md:text-2xl text-lg max-w-2xl text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-2 md:mb-6'
-                style={{ minHeight: '8rem' }}
-              >
-                {idx === activeIdx ? typewriterText : p?.content}
+              )} */}
+              <p className='md:text-2xl text-lg text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'>
+                {idx === activeIdx ? typewriterText : p.content}
               </p>
-              <small className='text-gray-500 dark:text-gray-400 block mb-8'>
-                {p && new Date(p.date).toLocaleString()}
+              <small className='text-gray-500 dark:text-gray-400 block mb-6'>
+                {new Date(p.date).toLocaleString()}
               </small>
-              {/* Only Rob can edit/delete */}
               {isRob && (
-                <div className='flex gap-3'>
+                <div className='flex justify-center gap-4'>
                   <button
                     className='text-blue-500 underline text-lg'
                     onClick={() => setEditPoem(p)}
@@ -197,36 +175,34 @@ export default function MoonPage() {
                   </button>
                   <button
                     className='text-red-500 underline text-lg'
-                    onClick={() => p && handleDelete(p.id)}
+                    onClick={() => handleDelete(p.id)}
                   >
                     Delete
                   </button>
                 </div>
               )}
-            </section>
-          );
-        })}
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Add Modal */}
       {isRob && (
-        <PoemModal
-          open={open}
-          onClose={() => setOpen(false)}
-          onSubmit={handleAdd}
-        />
-      )}
-      {/* Edit Modal */}
-      {isRob && (
-        <PoemModal
-          open={!!editPoem}
-          onClose={() => setEditPoem(null)}
-          onSubmit={(title, content) => {
-            if (editPoem) handleUpdate(editPoem.id, title, content);
-          }}
-          initialTitle={editPoem?.title}
-          initialContent={editPoem?.content}
-        />
+        <>
+          <PoemModal
+            open={open}
+            onClose={() => setOpen(false)}
+            onSubmit={handleAdd}
+          />
+          <PoemModal
+            open={!!editPoem}
+            onClose={() => setEditPoem(null)}
+            onSubmit={(title, content) => {
+              if (editPoem) handleUpdate(editPoem.id, title, content);
+            }}
+            initialTitle={editPoem?.title}
+            initialContent={editPoem?.content}
+          />
+        </>
       )}
     </main>
   );

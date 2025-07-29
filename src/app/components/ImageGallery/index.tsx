@@ -24,7 +24,6 @@ const ImageGallery = () => {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  // Fetch images from the API
   const fetchImages = async () => {
     const res = await fetch('/api/gallery');
     const data = await res.json();
@@ -35,26 +34,63 @@ const ImageGallery = () => {
     fetchImages();
   }, []);
 
-  // Open file dialog
   const handleButtonClick = () => {
     fileInputRef.current?.click();
   };
 
-  // Handle file upload
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    const formData = new FormData();
-    formData.append('file', file);
-    await fetch('/api/upload', { method: 'POST', body: formData });
-    setUploading(false);
-    fetchImages();
-    // Reset the input so you can re-upload the same file if you want
-    if (fileInputRef.current) fileInputRef.current.value = '';
+
+    if (!file) {
+      alert('No file selected.');
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file.');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Image is too large. Max 10MB allowed.');
+      return;
+    }
+
+    try {
+      setUploading(true);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      if (process.env.NODE_ENV === 'development') {
+        for (const [key, value] of formData.entries()) {
+          console.log(`${key}:`, value);
+        }
+      }
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        console.error('Upload error:', result);
+        throw new Error(result?.error || 'Upload failed');
+      }
+
+      await fetchImages();
+      alert('Upload successful!');
+    } catch (err) {
+      console.error('Upload error:', err);
+      alert('Image upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
-  // Delete handler
   const handleDelete = async (public_id: string) => {
     if (!window.confirm('Delete this image?')) return;
     await fetch('/api/gallery', {
@@ -107,9 +143,8 @@ const ImageGallery = () => {
           className='hidden'
           onChange={handleUpload}
           disabled={uploading}
-          title='Upload image'
-          placeholder='Choose an image to upload'
         />
+        {uploading && <p className='text-sm mt-2 text-gray-600'>Uploading...</p>}
       </div>
 
       {/* Masonry List */}
@@ -126,7 +161,7 @@ const ImageGallery = () => {
               width={400}
               height={600}
               className={styles.image}
-              unoptimized // important for external URLs
+              unoptimized
             />
           </div>
         ))}
@@ -162,7 +197,6 @@ const ImageGallery = () => {
                 onClick={closeLightbox}
                 type='button'
                 aria-label='Close lightbox'
-                title='Close'
               >
                 <RiCloseFill />
               </button>
@@ -172,7 +206,6 @@ const ImageGallery = () => {
                 onClick={showPrev}
                 type='button'
                 aria-label='Previous image'
-                title='Previous image'
               >
                 <RiArrowLeftCircleLine />
               </button>
@@ -182,7 +215,6 @@ const ImageGallery = () => {
                 onClick={showNext}
                 type='button'
                 aria-label='Next image'
-                title='Next image'
               >
                 <RiArrowRightCircleLine />
               </button>
