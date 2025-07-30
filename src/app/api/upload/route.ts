@@ -1,4 +1,3 @@
-// ✅ app/api/upload/route.ts (Server-side API Route)
 import { NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 import { Readable } from 'stream';
@@ -19,8 +18,8 @@ export async function POST(request: Request) {
     }
 
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = new Uint8Array(arrayBuffer);
-    const stream = Readable.from(buffer);
+   const buffer = Buffer.from(await file.arrayBuffer());
+const stream = Readable.from([buffer]);
 
     const uploadResult = await new Promise((resolve, reject) => {
       const cloudinaryStream = cloudinary.uploader.upload_stream(

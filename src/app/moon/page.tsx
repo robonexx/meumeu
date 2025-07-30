@@ -159,7 +159,7 @@ export default function MoonPage() {
                   {p.title}
                 </h2>
               )} */}
-              <p className='md:text-2xl text-lg text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'>
+              <p className='md:text-xl text-lg text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6'>
                 {idx === activeIdx ? typewriterText : p.content}
               </p>
               <small className='text-gray-500 dark:text-gray-400 block mb-6'>

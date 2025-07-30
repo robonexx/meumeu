@@ -164,7 +164,7 @@ export default function SunPage() {
                   {p.title}
                 </h2>
               )} */}
-              <p className='md:text-2xl text-lg text-gray-300 leading-relaxed whitespace-pre-line mb-6'>
+              <p className='md:text-xl text-lg text-gray-300 leading-relaxed whitespace-pre-line mb-6'>
                 {idx === activeIdx ? typewriterText : p.content}
               </p>
               <small className='text-gray-600 block mb-6'>

@@ -1,5 +1,5 @@
-// ✅ ImageGallery.tsx (Client Component)
 'use client';
+
 import React, { useRef, useState, useEffect, Suspense } from 'react';
 import imageCompression from 'browser-image-compression';
 import {
@@ -46,8 +46,8 @@ const ImageGallery = () => {
     try {
       setUploading(true);
       const compressed = await imageCompression(file, {
-        maxSizeMB: 2.5,
-        maxWidthOrHeight: 1920,
+        maxSizeMB: 2.2,
+        maxWidthOrHeight: 1080,
         useWebWorker: true,
       });
 
@@ -84,12 +84,12 @@ const ImageGallery = () => {
     fetchImages();
   };
 
-  const showPrev = (e: React.MouseEvent) => {
+  const showPrev = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev! - 1));
   };
 
-  const showNext = (e: React.MouseEvent) => {
+  const showNext = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     setSelectedIndex((prev) => (prev === images.length - 1 ? 0 : prev! + 1));
   };
@@ -115,7 +115,6 @@ const ImageGallery = () => {
           accept='image/*'
           className='hidden'
           title='Upload image'
-          placeholder='Select an image to upload'
         />
       </div>
 
@@ -155,7 +154,9 @@ const ImageGallery = () => {
             />
             <motion.div
               className={styles.lightboxContent}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e: React.MouseEvent<HTMLDivElement>) =>
+                e.stopPropagation()
+              }
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
@@ -163,8 +164,8 @@ const ImageGallery = () => {
               <button
                 className={styles.closeButton}
                 onClick={() => setSelectedIndex(null)}
-                aria-label='Close'
                 title='Close'
+                aria-label='Close'
               >
                 <RiCloseFill />
               </button>
