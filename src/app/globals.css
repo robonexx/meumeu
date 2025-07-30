@@ -5,12 +5,16 @@
   --foreground: #c8c8c8;
 }
 
+html {
+  background-color: var(--background);
+}
+
 html,
 body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: var(--background);
+
   background-size: cover;
   background-repeat: no-repeat;
   color: var(--foreground);
@@ -19,7 +23,6 @@ body {
 /* .snap-start {
   scroll-snap-align: start;
 } */
-
 
 ::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
