@@ -31,7 +31,7 @@ export default function PoemModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg w-full max-w-md">
+      <div className="bg-gray-800 p-6 rounded-lg w-full max-w-md">
         <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
           {initialTitle || initialContent ? 'Edit Poem' : 'New Poem'}
         </h2>
@@ -45,7 +45,7 @@ export default function PoemModal({
           <input
             name="title"
             placeholder="Title (optional)"
-            className="p-2 border rounded bg-gray-50 dark:bg-gray-700"
+            className="p-2 border rounded bg-gray-700"
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
@@ -53,7 +53,7 @@ export default function PoemModal({
             name="content"
             placeholder="Your poem..."
             rows={4}
-            className="p-2 border rounded bg-gray-50 dark:bg-gray-700"
+            className="p-2 border rounded bg-gray-700"
             required
             value={content}
             onChange={e => setContent(e.target.value)}
