@@ -7,7 +7,7 @@ export default function Nav() {
       {/* Brand */}
       <Link
         href='/'
-        className='font-bold tracking-tight text-base xs:text-lg sm:text-xl md:text-2xl px-2 md:px-4 py-2 text-white'
+        className='font-bold font-[family-name:var(--font-playfair)] tracking-tight text-base xs:text-lg sm:text-xl md:text-2xl px-2 md:px-4 py-2 text-white'
       >
         Meu Meu
       </Link>
