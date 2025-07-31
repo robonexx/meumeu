@@ -96,7 +96,7 @@ justify-content: center;
 .imageHolder {
   position: absolute;
   left: 50%;
-  top: 17.5%;
+  top: 0;
   transform: translate(-50%);
   display: flex;
   align-items: center;
@@ -160,6 +160,10 @@ section {
     padding: 20px;
     text-align: center;
 
+    h2:first-of-type {
+      margin-top: -5vh;
+    }
+
     h2 {
         font-size: clamp(1.5rem, 3vw, 2em);
         font-weight: 300;
@@ -189,7 +193,7 @@ section {
     min-height: 100vh;
     height: 100%;
     width: 80%;
-    margin: 20vh auto 10vh;
+    margin: 10vh auto 10vh;
     gap: 100px;
     padding-top: 20vh;
 
@@ -198,6 +202,10 @@ section {
         gap: 50px;
         height: fit-content;
     }
+}
+
+.body2 {
+  margin-top: 40vh;
 }
 
 .wrapper {

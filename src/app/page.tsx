@@ -175,8 +175,10 @@ export default function Home() {
             animate={inView1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Meu coração❤️
+            Minha Luna ❤️
           </motion.h2>
+        </section>
+        <section className='body2'>
           <Body2 />
         </section>
         <section>
@@ -200,7 +202,7 @@ export default function Home() {
           animate={inView3 ? { opacity: 1, x: 0 } : { opacity: 0, y: 100 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          Meu Amor❤️
+          Minun rakkaani ❤️
         </motion.h2>
         <Body3 />
       </section>
