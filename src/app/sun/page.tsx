@@ -156,15 +156,15 @@ export default function SunPage() {
         {poems.map((p, idx) => (
           <div
             key={p.id || idx}
-            className='snap-start min-w-full h-screen overflow-y-auto px-4 py-20 flex-shrink-0 scrollbar-hidden'
+            className='snap-start max-w-full w-screen h-screen overflow-y-auto px-4 py-20 flex-shrink-0 scrollbar-hidden'
           >
-            <div className='max-w-2xl mx-auto text-center'>
+            <div className='max-w-2xl sm:max-w-sm text-center mx-auto'>
               {/* {p.title && (
                 <h2 className='font-semibold text-3xl mb-6 text-gray-200'>
                   {p.title}
                 </h2>
               )} */}
-              <p className='md:text-xl text-lg text-gray-300 leading-relaxed whitespace-pre-line mb-6'>
+              <p className='md:text-xl text-lg text-gray-300 leading-relaxed whitespace-pre-line mb-6 mx-auto'>
                 {idx === activeIdx ? typewriterText : p.content}
               </p>
               <small className='text-gray-600 block mb-6'>
