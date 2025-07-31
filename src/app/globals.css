@@ -14,11 +14,10 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-
+  font-family: 'Playfair Display', serif;
   background-size: cover;
   background-repeat: no-repeat;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
 /* .snap-start {
   scroll-snap-align: start;

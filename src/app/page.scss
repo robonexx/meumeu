@@ -136,3 +136,116 @@ justify-content: center;
     opacity: 1;
   }
 }
+
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    gap: 50px;
+
+    @media (max-width: 768px) {
+        height: fit-content;
+        gap: 20px;
+    }
+
+}
+
+section {
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+
+    h2 {
+        font-size: clamp(1.5rem, 3vw, 2em);
+        font-weight: 300;
+        color: whitesmoke;
+        margin-bottom: 10px;
+
+        span {
+            position: relative;
+            display: inline-block;
+            color: var(--color-light-gold);
+            font-weight: bold;
+        }
+    }
+
+    p {
+        font-size: clamp(1rem, 2vw, 1.5em);
+        color: var(--color-light-gold);
+    }
+}
+
+.meumeu {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;        
+    justify-content: center;
+    min-height: 100vh;
+    height: 100%;
+    width: 80%;
+    margin: 20vh auto 10vh;
+    gap: 100px;
+    padding-top: 20vh;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 50px;
+        height: fit-content;
+    }
+}
+
+.wrapper {
+   position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;        
+    justify-content: center;
+    min-height: 100vh;
+    height: 100%;
+    width: 80%;
+    margin: 20vh auto 10vh;
+    gap: 100px;
+    padding-top: 20vh;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        gap: 50px;
+        height: fit-content;
+    }
+}
+
+
+.bottom {
+    height: 50vh;
+    width: 60%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+     h2 {
+        position: relative;
+        font-size: clamp(1.5rem, 3vw, 2em);
+        font-weight: 300;
+        color: whitesmoke;
+
+        span {
+            position: absolute;
+        }
+    }
+
+    p {
+        width: 100%;
+        display: block;
+        text-align: center;
+        font-size: clamp(1rem, 2vw, 1.5em);
+    }
+}

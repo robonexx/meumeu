@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Nav() {
   return (
-    <nav className='w-full bg-black/90 dark:bg-gray-900 shadow-md px-2 py-2 flex flex-row items-center justify-between'>
+    <nav className='w-full bg-black/90 dark:bg-gray-900 shadow-md px-2 py-2 flex flex-row items-center justify-between font-[family-name:var(--font-fira-sans)]'>
       {/* Brand */}
       <Link
         href='/'
