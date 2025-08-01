@@ -175,7 +175,7 @@ export default function Home() {
             animate={inView1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Minha Luna ❤️
+            Minha <span>Lua</span> ❤️
           </motion.h2>
         </section>
         <section className='body2'>
@@ -188,7 +188,7 @@ export default function Home() {
             animate={inView2 ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            Du är det vackraste jag har, min älskade Erika
+            Du är det vackraste jag har, min <span>älskade</span> Erika
           </motion.h2>
           <Body1 />
         </section>
@@ -202,7 +202,7 @@ export default function Home() {
           animate={inView3 ? { opacity: 1, x: 0 } : { opacity: 0, y: 100 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          Minun rakkaani ❤️
+          Minun <span>rakkaani</span> ❤️
         </motion.h2>
         <Body3 />
       </section>

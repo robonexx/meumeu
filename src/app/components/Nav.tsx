@@ -14,19 +14,19 @@ export default function Nav() {
       <div className='flex flex-row items-center gap-2 xs:gap-3 sm:gap-5'>
         <Link
           href='/moon'
-          className='px-2 md:px-4 py-1.5 md:py-2 text-white bg-gray-800 dark:bg-gray-700 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition text-sm xs:text-base md:text-lg'
+          className='px-2 md:px-4 py-1.5 md:py-2 text-white border rounded-full hover:bg-gray-700 dark:hover:bg-gray-600 transition text-sm xs:text-base md:text-lg'
         >
           Moon
         </Link>
         <Link
           href='/sun'
-          className='px-2 md:px-4 py-1.5 md:py-2 text-yellow-900 bg-yellow-300 dark:bg-yellow-500 rounded-lg hover:bg-yellow-400 dark:hover:bg-yellow-400 transition text-sm xs:text-base md:text-lg'
+          className='px-2 md:px-4 py-1.5 md:py-2 text-white border rounded-full hover:bg-yellow-400 dark:hover:bg-yellow-400 transition text-sm xs:text-base md:text-lg'
         >
           Sun
         </Link>
         <Link
           href='/gallery'
-          className='px-2 md:px-4 py-1.5 md:py-2 text-yellow-400 bg-gray-900 dark:bg-gray-800 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-700 transition text-sm xs:text-base md:text-lg'
+          className='px-2 md:px-4 py-1.5 md:py-2 text-white bg-black dark:bg-gray-800 rounded-full border hover:bg-gray-800 dark:hover:bg-gray-700 transition text-sm xs:text-base md:text-lg'
         >
           Gallery
         </Link>

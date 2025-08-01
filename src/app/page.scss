@@ -1,6 +1,7 @@
 
 $color-dark:  #121212;
 $color-light: #b1b1b1;
+$light-gold: #B8A054;
 
 $font-display: "Mea Culpa",  cursive;
 $font-body:    "Cormorant",  serif;
@@ -165,10 +166,13 @@ section {
     }
 
     h2 {
-        font-size: clamp(1.5rem, 3vw, 2em);
-        font-weight: 300;
-        color: whitesmoke;
-        margin-bottom: 10px;
+        text-align: left;
+  line-height: 1.5;
+  padding: clamp(20px, 5vw, 40px);
+  max-width: 980px;
+  color: white;
+  font-size: clamp(1rem, 2vw, 2rem);
+  font-family: var(--font-playfair);
 
         span {
             position: relative;
@@ -243,8 +247,6 @@ section {
         position: relative;
         font-size: clamp(1.5rem, 3vw, 2em);
         font-weight: 300;
-        color: whitesmoke;
-
         span {
             position: absolute;
         }
