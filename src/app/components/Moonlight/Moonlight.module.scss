@@ -1,0 +1,55 @@
+
+.section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(to top, #0a2a43, transparent);
+    z-index: 10000;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #0a2a43;
+    z-index: 10000;
+    mix-blend-mode: color;
+    pointer-events: none;
+  }
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  will-change: transform; // smoother
+  transform: translate3d(0,0,0);
+}
+
+.text {
+  position: relative;
+  color: #fff;
+  font-size: clamp(3rem, 10vw, 10em);
+  z-index: 1;
+  will-change: transform;
+  text-align: center;
+}
+
+.road {
+  z-index: 2;
+}

@@ -7,8 +7,49 @@ import ParagraphWord from './components/animations/ParagraphWord';
 import Body1 from './components/Body1';
 import Body2 from './components/Body2';
 import Body3 from './components/Body3';
-import Coffee from './components/coffee/Coffee';
 import './page.scss';
+import Moonlight from './components/Moonlight';
+
+const Para25 = (
+  <ParagraphWord>
+    <p>
+      Seven full moons have come and gone, <br />
+      since the night our fates were drawn.
+      <br />
+      A spark beneath that silver light,
+      <br />
+      ignited stars within our night.
+      <br />
+      <br />
+      The magnetism between us, so rare, <br />
+      like sun and moon in cosmic flare.
+      <br /> Light and shadow intertwined,
+      <br /> your soul and mine, forever aligned.
+      <br />
+      <br />
+      You bring warmth into my chest,
+      <br /> joy that makes my spirit rest. <br />I wish to keep on dancing
+      through,
+      <br /> each full moon’s glow with love so true.
+      <br />
+      <br />
+      Until this earthly life shall end,
+      <br /> and into realms unknown we’ll wend.
+      <br /> For even there, beneath new skies,
+      <br /> I’ll seek your light in endless highs.
+      <br />
+      <br />
+      So if one night you look above, <br />
+      and feel a pull,
+      <br /> a whispered shove,
+      <br /> it’s just the universe, <br />
+      reminding you: our bond is timeless, pure, and true.
+      <br />
+      And in this cycle,
+      <br /> round and round, our love, like moonlight, will always be found❤️
+    </p>
+  </ParagraphWord>
+);
 
 const para1 = (
   <ParagraphWord>
@@ -132,6 +173,9 @@ export default function Home() {
   return (
     <main className='w-full h-full font-[family-name:var(--font-geist-sans)] relative'>
       <div className='underlay'></div>
+      <div className='overlay'>
+        <Moonlight />
+      </div>
       <div className='svg'>
         <svg viewBox='0 0 201.33 202.05' xmlns='http://www.w3.org/2000/svg'>
           <defs>
@@ -167,6 +211,8 @@ export default function Home() {
           <source src='/sky.webm' type='video/webm' />
         </video>
       </div>
+      <div className='fullmoon7'>{Para25}</div>
+
       <div className='meumeu'>
         <section>
           <motion.h2

@@ -259,3 +259,14 @@ section {
         font-size: clamp(1rem, 2vw, 1.5em);
     }
 }
+
+.fullmoon7 {
+  position: relative; 
+  width: 100%;
+  min-height: 100vh;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;     
+  align-items: center;
+  justify-content: center;
+}
