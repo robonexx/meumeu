@@ -78,7 +78,7 @@ const para2 = (
       darrande men redo, och <span className='specialWord'>du mötte mig, </span>
       inte med rädsla, utan
       <span className='specialWord'> med ditt eget vidöppna. </span>
-      Nu ger vi varandra det som livet så sällan skänker –
+      Nu ger vi varandra det som livet så sällan skänker
       <br />
       <span className='specialWord'>kärlek som ser, </span>
       <br />
@@ -105,7 +105,7 @@ const para3 = (
       <span className='specialWord'> ville vara nära mig. </span>
       Du mötte mig där jag var, och just då kände jag den stilla kraften i att{' '}
       <span className='specialWord'>bli vald. </span> <br />
-      Du inspirerar mig att växa — som man, partner och människa. <br />
+      Du inspirerar mig att växa som man, partner och människa. <br />
       Med din kärlek växer det som redan fanns inom mig, men blir så mycket{' '}
       <span className='specialWord'>starkare, </span>
       <span className='specialWord'>klarare, </span>
@@ -173,9 +173,9 @@ export default function Home() {
   return (
     <main className='w-full h-full font-[family-name:var(--font-geist-sans)] relative'>
       <div className='underlay'></div>
-      <div className='overlay'>
+      {/* <div className='overlay'>
         <Moonlight />
-      </div>
+      </div> */}
       <div className='svg'>
         <svg viewBox='0 0 201.33 202.05' xmlns='http://www.w3.org/2000/svg'>
           <defs>
@@ -211,7 +211,7 @@ export default function Home() {
           <source src='/sky.webm' type='video/webm' />
         </video>
       </div>
-      <div className='fullmoon7'>{Para25}</div>
+     {/*  <div className='fullmoon7'>{Para25}</div> */}
 
       <div className='meumeu'>
         <section>
