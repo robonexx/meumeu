@@ -171,25 +171,30 @@ export default function Home() {
   useEffect(() => {
     initSky();
 
-    // Get Stockholm local time (Europe/Stockholm)
-    const nowStockholm = new Date(
-      new Date().toLocaleString('en-US', { timeZone: 'Europe/Stockholm' })
-    );
+    const now = new Date();
 
-    // Determine moon phase using Stockholm date
-    const currentMoon = getMoonPhase(nowStockholm);
-    setMoonPhase(currentMoon);
+    // Read Stockholm-local Y/M/D safely (no string parsing hacks)
+    const parts = new Intl.DateTimeFormat('sv-SE', {
+      timeZone: 'Europe/Stockholm',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    }).formatToParts(now);
 
-    // Sunday check (0 = Sunday)
-    const isSundayInStockholm = nowStockholm.getDay() === 0;
+    const getNum = (type: string) =>
+      Number(parts.find((p) => p.type === type)?.value);
 
-    // Full moon check (robust to casing/spacing)
-    const isFullMoon =
-      typeof currentMoon.phase === 'string' &&
-      /full\s*moon/i.test(currentMoon.phase);
+    const year = getNum('year');
+    const month = getNum('month'); // 1–12
+    const day = getNum('day');
 
-    // Only show on FULL MOON Sundays (matches your “this Sunday, Swedish time” intent)
-    setShowFullMoon7(isSundayInStockholm && isFullMoon);
+    // Visible only on Sunday 7 Sept 2025 (Stockholm time)
+    setShowFullMoon7(year === 2025 && month === 9 && day === 7);
+
+    // (Optional) keep your moon image in sync; using "now" is fine,
+    // or use the Stockholm date anchored at midnight UTC for consistency:
+    setMoonPhase(getMoonPhase(now));
+    // or: setMoonPhase(getMoonPhase(new Date(Date.UTC(year, month - 1, day))));
   }, []);
 
   return (
