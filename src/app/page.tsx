@@ -8,45 +8,45 @@ import Body1 from './components/Body1';
 import Body2 from './components/Body2';
 import Body3 from './components/Body3';
 import './page.scss';
-import Moonlight from './components/Moonlight';
+/* import Moonlight from './components/Moonlight'; */
 
 const Para25 = (
   <ParagraphWord>
     <p>
-      Seven full moons have come and gone, <br />
-      since the night our fates were drawn.
+      Eight full moons have lit the skies,
       <br />
-      A spark beneath that silver light,
+      since love first shone within our eyes.
       <br />
-      ignited stars within our night.
+      Through fire, storm, and gentle streams,
       <br />
-      <br />
-      The magnetism between us, so rare, <br />
-      like sun and moon in cosmic flare.
-      <br /> Light and shadow intertwined,
-      <br /> your soul and mine, forever aligned.
+      we’ve built a bond beyond our dreams.
       <br />
       <br />
-      You bring warmth into my chest,
-      <br /> joy that makes my spirit rest. <br />I wish to keep on dancing
-      through,
-      <br /> each full moon’s glow with love so true.
+      You’ve opened deeper parts of you,
+      <br />
+      your love shines warmer, strong, and true.
+      <br />
+      Yes, at times the shadows rise,
+      <br />
+      but still I see the truth in your eyes.
       <br />
       <br />
-      Until this earthly life shall end,
-      <br /> and into realms unknown we’ll wend.
-      <br /> For even there, beneath new skies,
-      <br /> I’ll seek your light in endless highs.
+      For I have no doubt, no fear within,
+      <br />
+      you are the love where I begin.
+      <br />
+      The one I choose, through highs and lows,
+      <br />
+      the one my heart forever knows.
       <br />
       <br />
-      So if one night you look above, <br />
-      and feel a pull,
-      <br /> a whispered shove,
-      <br /> it’s just the universe, <br />
-      reminding you: our bond is timeless, pure, and true.
+      So under this moon, so vast, so bright,
       <br />
-      And in this cycle,
-      <br /> round and round, our love, like moonlight, will always be found❤️
+      I vow again in silver light…
+      <br />
+      to walk with you through dark and clear,
+      <br />
+      my meu meu, my love, my dear. ❤️
     </p>
   </ParagraphWord>
 );
@@ -135,6 +135,8 @@ export default function Home() {
     waning: false,
   });
 
+  const [showFullMoon7, setShowFullMoon7] = useState(false);
+
   const ref1 = useRef(null);
   const inView1 = useInView(ref1, { once: true });
 
@@ -159,15 +161,35 @@ export default function Home() {
   const ref8 = useRef(null);
   const inView8 = useInView(ref8, { once: true });
 
-  useEffect(() => {
-    // Init the sky animation (stars, meteors, etc.)
+  /* useEffect(() => {
     initSky();
-
-    // Set the current moon phase
     const today = new Date();
-    // If you convert getMoonPhase to TS, type it as () => MoonPhase
     const currentMoon = getMoonPhase(today);
     setMoonPhase(currentMoon);
+  }, []); */
+
+  useEffect(() => {
+    initSky();
+
+    // Get Stockholm local time (Europe/Stockholm)
+    const nowStockholm = new Date(
+      new Date().toLocaleString('en-US', { timeZone: 'Europe/Stockholm' })
+    );
+
+    // Determine moon phase using Stockholm date
+    const currentMoon = getMoonPhase(nowStockholm);
+    setMoonPhase(currentMoon);
+
+    // Sunday check (0 = Sunday)
+    const isSundayInStockholm = nowStockholm.getDay() === 0;
+
+    // Full moon check (robust to casing/spacing)
+    const isFullMoon =
+      typeof currentMoon.phase === 'string' &&
+      /full\s*moon/i.test(currentMoon.phase);
+
+    // Only show on FULL MOON Sundays (matches your “this Sunday, Swedish time” intent)
+    setShowFullMoon7(isSundayInStockholm && isFullMoon);
   }, []);
 
   return (
@@ -211,7 +233,7 @@ export default function Home() {
           <source src='/sky.webm' type='video/webm' />
         </video>
       </div>
-     {/*  <div className='fullmoon7'>{Para25}</div> */}
+      {showFullMoon7 && <div className='fullmoon7'>{Para25}</div>}
 
       <div className='meumeu'>
         <section>
