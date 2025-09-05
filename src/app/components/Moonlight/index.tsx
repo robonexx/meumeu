@@ -65,7 +65,7 @@ export default function Moonlight() {
           alt="Road"
           className={`${styles.layer} ${styles.road}`}
         />
-        <h2 ref={textRef} className={styles.text}>Meu Meu </h2>
+        <h2 ref={textRef} className={styles.text}>Minha Lua🌕</h2>
       </section>
     </div>
   );

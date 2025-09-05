@@ -8,23 +8,26 @@ import Body1 from './components/Body1';
 import Body2 from './components/Body2';
 import Body3 from './components/Body3';
 import './page.scss';
-/* import Moonlight from './components/Moonlight'; */
+import Moonlight from './components/Moonlight';
 
 const Para25 = (
   <ParagraphWord>
     <p>
       Eight full moons have lit the skies,
       <br />
-      since love first shone within our eyes.
+      since love first hit within our eyes.
       <br />
       Through fire, storm, and gentle streams,
       <br />
       we’ve built a bond beyond our dreams.
       <br />
-      <br />
       You’ve opened deeper parts of you,
       <br />
       your love shines warmer, strong, and true.
+      <br />
+      I've been afraid and hurt you, deep in your skin,
+      <br />
+      yet here we stand, hopefully through thick and thin.
       <br />
       Yes, at times the shadows rise,
       <br />
@@ -46,7 +49,7 @@ const Para25 = (
       <br />
       to walk with you through dark and clear,
       <br />
-      my meu meu, my love, my dear. ❤️
+      my meu meu, my love, Erika my dear. ❤️
     </p>
   </ParagraphWord>
 );
@@ -200,6 +203,11 @@ export default function Home() {
   return (
     <main className='w-full h-full font-[family-name:var(--font-geist-sans)] relative'>
       <div className='underlay'></div>
+      {showFullMoon7 && (
+        <div className='overlay'>
+          <Moonlight />
+        </div>
+      )}
       {/* <div className='overlay'>
         <Moonlight />
       </div> */}
