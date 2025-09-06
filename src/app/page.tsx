@@ -25,10 +25,6 @@ const Para25 = (
       <br />
       your love shines warmer, strong, and true.
       <br />
-      I've been afraid and hurt you, deep in your skin,
-      <br />
-      yet here we stand, hopefully through thick and thin.
-      <br />
       Yes, at times the shadows rise,
       <br />
       but still I see the truth in your eyes.
