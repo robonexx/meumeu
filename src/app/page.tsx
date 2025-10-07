@@ -10,6 +10,7 @@ import Body3 from './components/Body3';
 import './page.scss';
 import Moonlight from './components/Moonlight';
 
+import Parallax from './components/Parallax/Parallax';
 const Para25 = (
   <ParagraphWord>
     <p>
@@ -248,6 +249,7 @@ export default function Home() {
       </div>
       {showFullMoon7 && <div className='fullmoon7'>{Para25}</div>}
 
+     <Parallax /> 
       <div className='meumeu'>
         <section>
           <motion.h2
