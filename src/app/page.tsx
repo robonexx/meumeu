@@ -245,7 +245,6 @@ export default function Home() {
           <source src='/sky.webm' type='video/webm' />
         </video>
       </div>
-      {showFullMoon7 && <div className='fullmoon7'>{Para25}</div>}
 
       {/*  <Parallax />  */}
       <div className='meumeu'>
