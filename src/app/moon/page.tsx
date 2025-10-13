@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import PoemModal from '../components/PoemModal';
 
@@ -42,7 +43,6 @@ export default function MoonPage() {
   const [editPoem, setEditPoem] = useState<Poem | null>(null);
   const [activeIdx, setActiveIdx] = useState(0);
   const [isRob, setIsRob] = useState(false);
-
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -137,13 +137,13 @@ export default function MoonPage() {
   const typewriterText = useTypewriter(activePoem?.content || '', true, 32);
 
   return (
-    <main className='min-h-screen bg-black text-white'>
+    <main className="min-h-screen bg-black text-white relative overflow-hidden">
       {isRob && (
         <button
           onClick={() => setOpen(true)}
-          className='fixed bottom-4 right-4 p-4 bg-gray-700 text-white rounded-full shadow-lg hover:bg-gray-600 transition z-50'
-          title='Add new poem'
-          aria-label='Add new poem'
+          className="fixed bottom-4 right-4 p-4 bg-gray-700 text-white rounded-full shadow-lg hover:bg-gray-600 transition z-50"
+          title="Add new poem"
+          aria-label="Add new poem"
         >
           <Plus size={24} />
         </button>
@@ -151,43 +151,49 @@ export default function MoonPage() {
 
       <div
         ref={containerRef}
-        className='flex overflow-x-auto snap-x snap-mandatory w-screen h-screen'
+        className="flex overflow-x-auto snap-x snap-mandatory w-screen h-screen"
         style={{ scrollBehavior: 'smooth' }}
       >
         {poems.map((p, idx) => (
           <div
             key={p.id || idx}
-            className='snap-start max-w-full w-screen h-screen overflow-y-auto px-4 py-20 flex-shrink-0 scrollbar-hidden'
+            className="snap-start w-screen h-screen flex-shrink-0 flex justify-center items-center px-4"
           >
-            <div className='max-w-2xl sm:max-w-sm text-center mx-auto'>
-              {/* {p.title && (
-                <h2 className='font-semibold text-3xl mb-6 text-gray-200 dark:text-gray-100'>
-                  {p.title}
-                </h2>
-              )} */}
-              <p className='md:text-xl text-lg text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6 mx-auto'>
-                {idx === activeIdx ? typewriterText : p.content}
-              </p>
-              <small className='text-gray-500 dark:text-gray-400 block mb-6'>
-                {new Date(p.date).toLocaleString()}
-              </small>
-              {isRob && (
-                <div className='flex justify-center gap-4'>
-                  <button
-                    className='text-blue-500 underline text-lg'
-                    onClick={() => setEditPoem(p)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className='text-red-500 underline text-lg'
-                    onClick={() => handleDelete(p.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
+            <AnimatePresence mode="wait">
+              {idx === activeIdx && (
+                <motion.div
+                  key={p.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -30 }}
+                  transition={{ duration: 0.6, ease: 'easeInOut' }}
+                  className="max-w-2xl sm:max-w-sm text-center mx-auto"
+                >
+                  <p className="md:text-xl text-lg text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6 mx-auto">
+                    {typewriterText}
+                  </p>
+                  <small className="text-gray-500 dark:text-gray-400 block mb-6">
+                    {new Date(p.date).toLocaleString()}
+                  </small>
+                  {isRob && (
+                    <div className="flex justify-center gap-4">
+                      <button
+                        className="text-blue-500 underline text-lg"
+                        onClick={() => setEditPoem(p)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="text-red-500 underline text-lg"
+                        onClick={() => handleDelete(p.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </motion.div>
               )}
-            </div>
+            </AnimatePresence>
           </div>
         ))}
       </div>

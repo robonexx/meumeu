@@ -8,9 +8,10 @@ import Body1 from './components/Body1';
 import Body2 from './components/Body2';
 import Body3 from './components/Body3';
 import './page.scss';
-import Moonlight from './components/Moonlight';
+import Magnetic from './components/magnetic/magnetic';
 
-import Parallax from './components/Parallax/Parallax';
+
+
 const Para25 = (
   <ParagraphWord>
     <p>
@@ -200,11 +201,11 @@ export default function Home() {
   return (
     <main className='w-full h-full font-[family-name:var(--font-geist-sans)] relative'>
       <div className='underlay'></div>
-      {showFullMoon7 && (
+      {/*  {showFullMoon7 && (
         <div className='overlay'>
           <Moonlight />
         </div>
-      )}
+      )} */}
       {/* <div className='overlay'>
         <Moonlight />
       </div> */}
@@ -227,17 +228,18 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* Moon phase image */}
-      <div className='imageHolder'>
-        {moonPhase.src && (
-          <img
-            src={moonPhase.src}
-            alt={moonPhase.phase}
-            className={moonPhase.waning ? 'waning' : ''}
-          />
-        )}
-      </div>
-
+      {/* Moon phase image */}    
+        <div className='imageHolder'>
+          {moonPhase.src && (
+           
+            <img
+              src={moonPhase.src}
+              alt={moonPhase.phase}
+              className={moonPhase.waning ? 'waning' : ''}
+            />
+            
+          )}
+        </div>
       <div className='video-bg'>
         <video autoPlay muted loop playsInline>
           <source src='/sky.webm' type='video/webm' />
@@ -245,7 +247,7 @@ export default function Home() {
       </div>
       {showFullMoon7 && <div className='fullmoon7'>{Para25}</div>}
 
-     <Parallax /> 
+      {/*  <Parallax />  */}
       <div className='meumeu'>
         <section>
           <motion.h2
