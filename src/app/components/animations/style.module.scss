@@ -6,13 +6,12 @@ $light-gold: #B8A054;
   padding: clamp(20px, 5vw, 40px);
   max-width: 980px;
   color: white;
-  font-size: clamp(1rem, 2vw, 2rem);
-  font-family: var(--font-playfair);
+  font-size: clamp(1rem, 1vw, 1.25rem);
 
   // No need for display: flex or wrapping tricks
 }
 
 .specialWord {
   color: $light-gold;
-  font-weight: bold;
+  font-weight: semi-bold;
 }

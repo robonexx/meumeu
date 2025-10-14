@@ -8,9 +8,8 @@ import Body1 from './components/Body1';
 import Body2 from './components/Body2';
 import Body3 from './components/Body3';
 import './page.scss';
-import Magnetic from './components/magnetic/magnetic';
-
-
+import Showcase from './components/Showcase.jsx';
+import Performance from './components/Performance.jsx';
 
 const Para25 = (
   <ParagraphWord>
@@ -189,7 +188,6 @@ export default function Home() {
     const month = getNum('month'); // 1–12
     const day = getNum('day');
 
-    // Visible only on Sunday 7 Sept 2025 (Stockholm time)
     setShowFullMoon7(year === 2025 && month === 9 && day === 7);
 
     // (Optional) keep your moon image in sync; using "now" is fine,
@@ -199,7 +197,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className='w-full h-full font-[family-name:var(--font-geist-sans)] relative'>
+    <main className='font-[family-name:var(--font-geist-sans)] relative'>
       <div className='underlay'></div>
       {/*  {showFullMoon7 && (
         <div className='overlay'>
@@ -228,25 +226,22 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* Moon phase image */}    
+      {/* Moon phase image */}
+      <section className='h-screen relative flex flex-col items-center justify-center text-white'>
         <div className='imageHolder'>
           {moonPhase.src && (
-           
             <img
               src={moonPhase.src}
               alt={moonPhase.phase}
               className={moonPhase.waning ? 'waning' : ''}
             />
-            
           )}
         </div>
-      <div className='video-bg'>
-        <video autoPlay muted loop playsInline>
-          <source src='/sky.webm' type='video/webm' />
-        </video>
-      </div>
-
-      {/*  <Parallax />  */}
+        <h2 className='absolute top-[60vh] z-10 text-center'>
+          fly me to the moon... but first scroll down{' '}
+        </h2>
+      </section>
+      {/* 
       <div className='meumeu'>
         <section>
           <motion.h2
@@ -366,6 +361,18 @@ export default function Home() {
             ❤️
           </motion.span>
         </p>
+      </div> */}
+      <Showcase />
+      <Performance />
+      <div className='w-screen h-screen relative pointer-events-none mt-20'>
+        <video
+          src='/videos/meumeu.mp4'
+          loop
+          muted
+          autoPlay
+          playsInline
+          className='mx-auto sm:w-screen md:w-fit'
+        />
       </div>
     </main>
   );
