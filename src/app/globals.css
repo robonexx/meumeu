@@ -95,7 +95,7 @@ body {
 
 @layer components {
   #showcase {
-    @apply relative;
+    @apply relative max-h-fit;
 
     .media {
       @apply relative lg:overflow-hidden;
@@ -138,7 +138,7 @@ body {
   }
 
   #performance {
-    @apply w-dvw min-h-full overflow-hidden pt-20 lg:pt-40 lg:mt-72 flex flex-col items-center relative;
+    @apply w-dvw min-h-full max-h-fit overflow-hidden pt-20 lg:pt-40 lg:mt-72 flex flex-col items-center relative;
 
     h2 {
       @apply font-semibold text-3xl lg:text-6xl text-white max-w-2xl text-center;
