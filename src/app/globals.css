@@ -95,7 +95,7 @@ body {
 
 @layer components {
   #showcase {
-    @apply relative max-h-fit;
+    @apply relative;
 
     .media {
       @apply relative lg:overflow-hidden;
