@@ -227,7 +227,7 @@ export default function Home() {
       </div>
 
       {/* Moon phase image */}
-      <section className='h-screen relative flex flex-col items-center justify-center text-white'>
+      <section className='h-screen relative flex flex-col items-center justify-center text-white '>
         <div className='imageHolder'>
           {moonPhase.src && (
             <img
@@ -362,8 +362,11 @@ export default function Home() {
           </motion.span>
         </p>
       </div> */}
+
       <Showcase />
+
       <Performance />
+
       <div className='w-screen h-screen relative pointer-events-none mt-20'>
         <video
           src='/videos/meumeu.mp4'
