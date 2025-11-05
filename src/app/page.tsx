@@ -27,28 +27,24 @@ const para1 = (
 const para2 = (
   <ParagraphWord>
     <p>
-      Att vara med dig känns som en <span className='specialWord'>dröm, </span>
-      men varje blick, varje <span className='specialWord'>andetag,</span>
-      påminner mig om att det är <span className='specialWord'>verkligt. </span>
-      Och kanske är det just det som gör det skrämmande – inte för att jag
-      tvivlar, utan för att det{' '}
-      <span className='specialWord'>känns så rätt, </span>
-      <span className='specialWord'>så äkta, </span>som något jag längtat efter
-      utan att veta om det.
+      Med dig känns allt <span className='specialWord'>enkelt </span>, som om
+      världen äntligen hittat sin plats. Vi gömmer oss inte längre, våra hem
+      står öppna, våra liv sammanflätade.
       <br />
-      Jag öppnade mitt <span className='specialWord'>hjärta, </span>
-      darrande men redo, och <span className='specialWord'>du mötte mig, </span>
-      inte med rädsla, utan
-      <span className='specialWord'> med ditt eget vidöppna. </span>
-      Nu ger vi varandra det som livet så sällan skänker
+      Du har din plats i mitt, jag i ditt, och mellan oss finns inte längre en
+      osäkerhet, bara den stilla vissheten om att vi hör hemma här och hos{' '}
+      <span className='specialWord'>varandra. </span>
       <br />
-      <span className='specialWord'>kärlek som ser, </span>
+      Vi har lagt nycklarna i varandras händer, inte bara till våra dörrar utan
+      till våra <span className='specialWord'>hjärtan. </span>
       <br />
-      <span className='specialWord'>kärlek som känns, </span>
+      Våra barn vet om oss, vi blir sakta mer och mer en del i varandras vardag.
       <br />
-      <span className='specialWord'>kärlek som viskar: </span>
+      Du och jag har byggt något som inte behöver döljas, något som står stadigt
+      även när livet skakar.
       <br />
-      ”I mitt hjärta väljer jag dig”
+      För varje dag du ser på mig blir världen lite mjukare, och jag tänker...
+      <span className='specialWord'> det här är hemma. </span>
     </p>
   </ParagraphWord>
 );
