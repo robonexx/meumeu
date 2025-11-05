@@ -10,54 +10,16 @@ import Body3 from './components/Body3';
 import './page.scss';
 import Showcase from './components/Showcase.jsx';
 import Performance from './components/Performance.jsx';
-
-const Para25 = (
-  <ParagraphWord>
-    <p>
-      Eight full moons have lit the skies,
-      <br />
-      since love first hit within our eyes.
-      <br />
-      Through fire, storm, and gentle streams,
-      <br />
-      we’ve built a bond beyond our dreams.
-      <br />
-      You’ve opened deeper parts of you,
-      <br />
-      your love shines warmer, strong, and true.
-      <br />
-      Yes, at times the shadows rise,
-      <br />
-      but still I see the truth in your eyes.
-      <br />
-      <br />
-      For I have no doubt, no fear within,
-      <br />
-      you are the love where I begin.
-      <br />
-      The one I choose, through highs and lows,
-      <br />
-      the one my heart forever knows.
-      <br />
-      <br />
-      So under this moon, so vast, so bright,
-      <br />
-      I vow again in silver light…
-      <br />
-      to walk with you through dark and clear,
-      <br />
-      my meu meu, my love, Erika my dear. ❤️
-    </p>
-  </ParagraphWord>
-);
+import SolarSystem from './components/SolarSystem';
+import MoonCanvas from './components/MoonCanvas';
 
 const para1 = (
   <ParagraphWord>
     <p>
-      Din <span className='specialWord'>röst</span> är den särskilda
-      <span className='specialWord'> platsen</span> där min
-      <span className='specialWord'> själ</span> minns hur man
-      <span className='specialWord'> andas</span>
+      Du <span className='specialWord'>har</span> blivit mitt allt,
+      <span className='specialWord'> ditt hjärta </span> är där
+      <span className='specialWord'> min själ</span> kan vila
+      <span className='specialWord'> där jag andas</span>
     </p>
   </ParagraphWord>
 );
@@ -94,25 +56,44 @@ const para2 = (
 const para3 = (
   <ParagraphWord>
     <p>
-      Först fyllde du mina morgnar med{' '}
-      <span className='specialWord'>kärlek, </span>
-      bara genom att finnas i mina <span className='specialWord'>
-        tankar.{' '}
-      </span>{' '}
+      ☀️🌕♏♉
       <br />
-      Sen gav du mig <span className='specialWord'>din tid, </span>
-      inte för att du behövde, utan för att du
-      <span className='specialWord'> ville vara nära mig. </span>
-      Du mötte mig där jag var, och just då kände jag den stilla kraften i att{' '}
-      <span className='specialWord'>bli vald. </span> <br />
-      Du inspirerar mig att växa som man, partner och människa. <br />
-      Med din kärlek växer det som redan fanns inom mig, men blir så mycket{' '}
-      <span className='specialWord'>starkare, </span>
-      <span className='specialWord'>klarare, </span>
-      <span className='specialWord'>levande. </span>
       <br />
-      Tack för att du är just
-      <span className='specialWord'> du. ❤️</span>
+      The Sun in <span className='specialWord'>Scorpio,</span>
+      <br />
+      The Moon in <span className='specialWord'>Taurus.</span>
+      <br />
+      Fire and earth in cosmic flow,
+      <br />
+      two souls bound, true love now shown.
+      <br />
+      <br />
+      A few full moons have come and gone,
+      <br />
+      yet still our light keeps shining on.
+      <br />
+      Stronger now, both calm and free,
+      <br />
+      rooted deep in our destiny.
+      <br />
+      <br />
+      You, my Moon so soft, <span className='specialWord'>divine,</span>
+      <br />
+      your glow forever mirrors mine.
+      <br />
+      And I, your Sun in endless flight,
+      <br />
+      chasing your soul through day and night.
+      <br />
+      <br />
+      This love’s no spark that fades or dies,
+      <br />
+      it’s written high across the skies.
+      <br />
+      For we, like stars, are born to stay —
+      <br />
+      two hearts, one orbit, night and day.
+      <span className='specialWord'> ❤️</span>
     </p>
   </ParagraphWord>
 );
@@ -199,14 +180,8 @@ export default function Home() {
   return (
     <main className='font-[family-name:var(--font-geist-sans)] relative'>
       <div className='underlay'></div>
-      {/*  {showFullMoon7 && (
-        <div className='overlay'>
-          <Moonlight />
-        </div>
-      )} */}
-      {/* <div className='overlay'>
-        <Moonlight />
-      </div> */}
+      <MoonCanvas />
+      <SolarSystem />
       <div className='svg'>
         <svg viewBox='0 0 201.33 202.05' xmlns='http://www.w3.org/2000/svg'>
           <defs>
@@ -227,7 +202,7 @@ export default function Home() {
       </div>
 
       {/* Moon phase image */}
-      <section className='h-screen relative flex flex-col items-center justify-center text-white '>
+      {/* <section className='h-screen relative flex flex-col items-center justify-center text-white '>
         <div className='imageHolder'>
           {moonPhase.src && (
             <img
@@ -237,40 +212,14 @@ export default function Home() {
             />
           )}
         </div>
-        <h2 className='absolute top-[60vh] z-10 text-center'>
-          fly me to the moon... but first scroll down{' '}
-        </h2>
-      </section>
-      {/* 
-      <div className='meumeu'>
-        <section>
-          <motion.h2
-            ref={ref1}
-            initial={{ opacity: 0, x: -50 }}
-            animate={inView1 ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            Minha <span>Lua</span> 🌕
-          </motion.h2>
-        </section>
-        <section className='body2'>
-          <Body2 />
-        </section>
-        <section>
-          <motion.h2
-            ref={ref2}
-            initial={{ opacity: 0, x: 50 }}
-            animate={inView2 ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            Du kom in i mitt liv som från en <span>dröm</span> mitt hjärta ❤️
-          </motion.h2>
-          <Body1 />
-        </section>
-      </div>
-      <section>{para1}</section>
+      </section> */}
 
-      <section>
+      {/* <div className='meumeu'>
+
+      </div> */}
+      <section>{para3}</section>
+
+      {/*       <section>
         <motion.h2
           ref={ref3}
           initial={{ opacity: 0, y: 100 }}
@@ -279,10 +228,10 @@ export default function Home() {
         >
           Minun <span>rakkaani</span> ❤️
         </motion.h2>
-        <Body3 />
-      </section>
+          <Body3 />
+      </section> */}
+      <section>{para1}</section>
       <section>{para2}</section>
-      <section>{para3}</section>
 
       <div className='bottom'>
         <h2>
@@ -361,13 +310,9 @@ export default function Home() {
             ❤️
           </motion.span>
         </p>
-      </div> */}
+      </div>
 
-      <Showcase />
-
-      <Performance />
-
-      <div className='w-screen h-screen relative pointer-events-none mt-20'>
+      {/* <div className='w-screen h-screen relative pointer-events-none mt-20'>
         <video
           src='/videos/meumeu.mp4'
           loop
@@ -376,7 +321,7 @@ export default function Home() {
           playsInline
           className='mx-auto sm:w-screen md:w-fit'
         />
-      </div>
+      </div> */}
     </main>
   );
 }
