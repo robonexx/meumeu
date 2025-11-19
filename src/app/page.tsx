@@ -176,8 +176,8 @@ export default function Home() {
   return (
     <main className='font-[family-name:var(--font-geist-sans)] relative'>
       <div className='underlay'></div>
-      <MoonCanvas />
-      <SolarSystem />
+      {/* <MoonCanvas />
+      <SolarSystem /> */}
       <div className='svg'>
         <svg viewBox='0 0 201.33 202.05' xmlns='http://www.w3.org/2000/svg'>
           <defs>
@@ -198,7 +198,7 @@ export default function Home() {
       </div>
 
       {/* Moon phase image */}
-      {/* <section className='h-screen relative flex flex-col items-center justify-center text-white '>
+      <section className='h-screen relative flex flex-col items-center justify-center text-white '>
         <div className='imageHolder'>
           {moonPhase.src && (
             <img
@@ -208,12 +208,12 @@ export default function Home() {
             />
           )}
         </div>
-      </section> */}
+      </section>
 
       {/* <div className='meumeu'>
 
       </div> */}
-      <section>{para3}</section>
+    {/*   <section>{para3}</section> */}
 
       {/*       <section>
         <motion.h2
@@ -226,8 +226,8 @@ export default function Home() {
         </motion.h2>
           <Body3 />
       </section> */}
-      <section>{para1}</section>
-      <section>{para2}</section>
+     {/*  <section>{para1}</section>
+      <section>{para2}</section> */}
 
       <div className='bottom'>
         <h2>
