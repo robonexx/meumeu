@@ -14,4 +14,5 @@ $light-gold: #B8A054;
 .specialWord {
   color: $light-gold;
   font-weight: semi-bold;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
 }
