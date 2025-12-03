@@ -101,6 +101,7 @@ const para4 = (
       This fullmoon is in the{' '}
       <span className='specialWord'>spirit of x-mas light...</span>
       <br />
+      <br />
       Eleven <span className='specialWord'>fullmoons</span> have risen since
       that night,
       <br />
