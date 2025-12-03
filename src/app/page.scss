@@ -192,15 +192,16 @@ section {
 }
 
 .meumeu {
-    position: relative;
+    position: absolute;
+    top: 0;
     display: flex;
     flex-direction: row;
     align-items: center;        
     justify-content: center;
-    min-height: 100vh;
-    height: 100%;
-    width: 80%;
-    margin: 10vh auto 10vh;
+    height: 100vh;
+    width: 100%;
+    z-index: 10000;
+
     gap: 100px;
     padding-top: 20vh;
 
@@ -209,6 +210,47 @@ section {
         gap: 50px;
         height: fit-content;
     }
+}
+
+.mtitle {
+  position: absolute;
+  top: 5vh;
+  transform: rotate(-15deg);
+  left: 7vw;
+  z-index: 10000;
+  font-family: $font-body;
+  font-size: clamp(3rem, 8vw, 6rem);
+  color: #e6e4dd !important;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(241, 67, 119, 0.945);
+}
+.mtitle2 {
+  position: absolute;
+  top: 7vh;
+  transform: rotate(-15deg);
+  left: 11vw;
+  z-index: 10000;
+  font-family: $font-body;
+  font-size: clamp(3rem, 8vw, 6rem);
+  color: #e6e4dd !important;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(168, 13, 122, 0.912);
+}
+
+.mtitle3 {
+  position: absolute;
+  top: 10vh;
+  transform: rotate(-2deg);
+  left: 60vw;
+  z-index: 10000;
+  font-family: $font-body;
+  font-size: clamp(5rem, 8vw, 6rem);
+  color: #e6e4dd !important;
+  font-weight: 800;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(231, 44, 87, 0.876);
 }
 
 .body2 {

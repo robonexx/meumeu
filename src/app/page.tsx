@@ -12,6 +12,7 @@ import Showcase from './components/Showcase.jsx';
 import Performance from './components/Performance.jsx';
 import SolarSystem from './components/SolarSystem';
 import MoonCanvas from './components/MoonCanvas';
+import SnowGlobe from './components/SnowGlobe';
 
 const para1 = (
   <ParagraphWord>
@@ -90,6 +91,51 @@ const para3 = (
       <br />
       two hearts, one orbit, night and day.
       <span className='specialWord'> ❤️</span>
+    </p>
+  </ParagraphWord>
+);
+
+const para4 = (
+  <ParagraphWord>
+    <p>
+      This fullmoon is in the{' '}
+      <span className='specialWord'>spirit of x-mas light...</span>
+      <br />
+      Eleven <span className='specialWord'>fullmoons</span> have risen since
+      that night,
+      <br />
+      when two souls met in <span className='specialWord'>borrowed light.</span>
+      <br />
+      Through storm and calm, through dark and clear,
+      <br />
+      our hearts kept finding home right here.
+      <br />
+      <br />
+      The <span className='specialWord'>wildest fire</span> has turned to glow,
+      <br />
+      a steady warmth the seasons know.
+      <br />
+      No longer just a dream begun,
+      <br />
+      but love that lives beneath the sun.
+      <br />
+      <br />
+      We’ve shared our worlds, our hearts, our skies,
+      <br />
+      learned to see truth through each other’s eyes.
+      <br />
+      And though I still ache when we’re apart,
+      <br />I carry your <span className='specialWord'>moonlight</span> in my
+      heart.
+      <br />
+      <br />
+      Eleven fullmoons have passed
+      <br />
+      yet it feels so new,
+      <br />
+      each one a whisper…
+      <br />
+      <span className='specialWord'>I choose you. 🌕❤️</span>
     </p>
   </ParagraphWord>
 );
@@ -198,7 +244,7 @@ export default function Home() {
       </div>
 
       {/* Moon phase image */}
-      <section className='h-screen relative flex flex-col items-center justify-center text-white '>
+      {/*  <section className='h-screen relative flex flex-col items-center justify-center text-white '>
         <div className='imageHolder'>
           {moonPhase.src && (
             <img
@@ -208,12 +254,15 @@ export default function Home() {
             />
           )}
         </div>
-      </section>
+      </section> */}
+      <SnowGlobe />
 
-      {/* <div className='meumeu'>
-
-      </div> */}
-    {/*   <section>{para3}</section> */}
+      <div className='meumeu'>
+        <h5 className='mtitle'>Meu Meu</h5>
+        <h5 className='mtitle2'>My Moon magic</h5>
+        <h5 className='mtitle3'>❤️</h5>
+      </div>
+      <section>{para4}</section>
 
       {/*       <section>
         <motion.h2
@@ -226,7 +275,7 @@ export default function Home() {
         </motion.h2>
           <Body3 />
       </section> */}
-     {/*  <section>{para1}</section>
+      {/*  <section>{para1}</section>
       <section>{para2}</section> */}
 
       <div className='bottom'>
