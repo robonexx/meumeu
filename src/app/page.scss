@@ -182,11 +182,12 @@ section {
             display: inline-block;
             color: var(--color-light-gold);
             font-weight: bold;
+             font-size: clamp(1.25rem, 2vw, 1.5rem);
         }
     }
 
     p {
-        font-size: clamp(1rem, 2vw, 1.5em);
+        font-size: clamp(1.25rem, 2vw, 1.5rem);
         color: var(--color-light-gold);
     }
 }
