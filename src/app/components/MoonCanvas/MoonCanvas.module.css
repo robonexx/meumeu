@@ -1,8 +1,8 @@
 .canvas {
   height: 100vh;
   width: 100%;
-  background-color: #000;
-  background-image: url('https://cdn.mos.cms.futurecdn.net/HuGGeENt6kGyixe3hT9tnY-1920-80.jpg.webp');
+  /* background-color: #000; */
+ /*  background-image: url('https://cdn.mos.cms.futurecdn.net/HuGGeENt6kGyixe3hT9tnY-1920-80.jpg.webp'); */
   display: grid;
   place-items: center;
   overflow: hidden;
