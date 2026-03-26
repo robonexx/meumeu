@@ -17,10 +17,12 @@ import SnowGlobe from './components/SnowGlobe';
 const para1 = (
   <ParagraphWord>
     <p>
-      Du <span className='specialWord'>har</span> blivit mitt allt,
+      Du är <span className='specialWord'>mitt ALLT!</span>, nära{' '}
       <span className='specialWord'> ditt hjärta </span> är där
-      <span className='specialWord'> min själ</span> kan vila
-      <span className='specialWord'> där jag andas</span>
+      <span className='specialWord'> mitt hjärta</span> har sitt hem. Där jag
+      kan
+      <span className='specialWord'> andas</span> och där jag känner att min
+      <span className='specialWord'> själ</span> kan vara trygg oc hitta ro.
     </p>
   </ParagraphWord>
 );
@@ -28,24 +30,22 @@ const para1 = (
 const para2 = (
   <ParagraphWord>
     <p>
-      Med dig känns allt <span className='specialWord'>enkelt </span>, som om
-      världen äntligen hittat sin plats. Vi gömmer oss inte längre, våra hem
-      står öppna, våra liv sammanflätade.
+      Med dig känns allt <span className='specialWord'>rätt </span>, som att min
+      värld äntligen hittat sitt riktiga hem. Vi är ingen hemlighet längre, våra hem
+      står öppna för varandra, våra barn är med på vår resa, och våra liv är mer sammanflätade.
       <br />
-      Du har din plats i mitt, jag i ditt, och mellan oss finns inte längre en
-      osäkerhet, bara den stilla vissheten om att vi hör hemma här och hos{' '}
+      Du har ditt hem i mitt hjärta, jag i ditt, och mellan oss finns inte längre samma
+      osäkerhet, bara en känsla av att vi hör ihop, för evigt.
       <span className='specialWord'>varandra. </span>
       <br />
-      Vi har lagt nycklarna i varandras händer, inte bara till våra dörrar utan
-      till våra <span className='specialWord'>hjärtan. </span>
+      Vi har lagt tiden i varandras händer, inte bara till våra liv utan
+      till våra <span className='specialWord'>hjärtan och själar. </span>
       <br />
-      Våra barn vet om oss, vi blir sakta mer och mer en del i varandras vardag.
+      Vi har kämpat och byggt något som kan bli en starkare grund för oss båda att stå på, och det känns så fint att se hur det växer sig starkare varje dag.
       <br />
-      Du och jag har byggt något som inte behöver döljas, något som står stadigt
-      även när livet skakar.
-      <br />
-      För varje dag du ser på mig blir världen lite mjukare, och jag tänker...
-      <span className='specialWord'> det här är hemma. </span>
+      För varje dag du ser på mig blir världen en lite bättre plats att leva i, och jag tänker...
+      <span className='specialWord'> det här är livet. </span> Det här är riktig kärlek.
+      Det är mitt livs sista saga, sagan om <span className='specialWord'> SOLEN OCH MÅNEN </span>
     </p>
   </ParagraphWord>
 );
@@ -225,7 +225,7 @@ export default function Home() {
       <div className='underlay'></div>
       <MoonCanvas />
       <SolarSystem />
-     {/*  <div className='svg'>
+      {/*  <div className='svg'>
         <svg viewBox='0 0 201.33 202.05' xmlns='http://www.w3.org/2000/svg'>
           <defs>
             <linearGradient
@@ -245,7 +245,7 @@ export default function Home() {
       </div> */}
 
       {/* Moon phase image */}
-     {/*  <section className='h-screen relative flex flex-col items-center justify-center text-white '>
+      {/*  <section className='h-screen relative flex flex-col items-center justify-center text-white '>
         <div className='imageHolder'>
           {moonPhase.src && (
             <img
@@ -272,9 +272,9 @@ export default function Home() {
           animate={inView3 ? { opacity: 1, x: 0 } : { opacity: 0, y: 100 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          Minun <span>rakkaani</span> ❤️
+          Minä <span>rakastan</span> sinua, Erika ❤️
         </motion.h2>
-        <Body3 />
+        <Body1 />
       </section>
       <section>{para1}</section>
       <section>{para2}</section>
