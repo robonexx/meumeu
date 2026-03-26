@@ -37,14 +37,14 @@ const para2 = (
       <br />
       Du har ditt hem i mitt hjärta, jag i ditt, och mellan oss finns inte längre samma
       osäkerhet, bara en känsla av att vi hör ihop, för evigt.
-      <span className='specialWord'>varandra. </span>
+      <span className='specialWord'> Med varandra. </span>
       <br />
-      Vi har lagt tiden i varandras händer, inte bara till våra liv utan
+      Vi har lagt tiden i varandras händer, givit varanda en del av oss, nyckeln
       till våra <span className='specialWord'>hjärtan och själar. </span>
       <br />
       Vi har kämpat och byggt något som kan bli en starkare grund för oss båda att stå på, och det känns så fint att se hur det växer sig starkare varje dag.
       <br />
-      För varje dag du ser på mig blir världen en lite bättre plats att leva i, och jag tänker...
+      För varje dag du ser på mig, blir världen en lite bättre plats att leva i, och jag tänker...
       <span className='specialWord'> det här är livet. </span> Det här är riktig kärlek.
       Det är mitt livs sista saga, sagan om <span className='specialWord'> SOLEN OCH MÅNEN </span>
     </p>
