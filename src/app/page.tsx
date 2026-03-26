@@ -17,12 +17,13 @@ import SnowGlobe from './components/SnowGlobe';
 const para1 = (
   <ParagraphWord>
     <p>
-      Du är <span className='specialWord'>mitt ALLT!</span>, nära{' '}
+      Du är <span className='specialWord'>mitt ALLT!</span> nära{' '}
       <span className='specialWord'> ditt hjärta </span> är där
       <span className='specialWord'> mitt hjärta</span> har sitt hem. Där jag
       kan
       <span className='specialWord'> andas</span> och där jag känner att min
-      <span className='specialWord'> själ</span> kan vara trygg oc hitta ro.
+      <span className='specialWord'> själ</span> kan vara trygg och hitta ro. <br />
+      Och jag hoppas du känner likadant...
     </p>
   </ParagraphWord>
 );
