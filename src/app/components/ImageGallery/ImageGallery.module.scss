@@ -1,151 +1,227 @@
-$font-text: var(--font-playfair);
-$light-gold: #B8A054;
-
 .galleryWrapper {
-  padding: 2rem;
-  font-family: var(--font-playfair);
-  color: #f8f8f8;
-  font-size: 1.25rem;
-  height: fit-content;
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-    font-size: 1rem;
-  }
-
-p {
-  padding: 3rem 0;
-  letter-spacing: 1px;
-
-  @media (max-width: 768px) {
-    padding: 1rem 0;
-  }
+  position: relative;
+  z-index: 1;
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  font-family: var(--font-cormorant), Georgia, serif;
+  color: #fff8f2;
 }
 
+.header {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+  text-align: center;
+}
 
-
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .55rem 1rem;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 999px;
+  background: rgba(255,255,255,.06);
+  color: rgba(255,248,242,.62);
+  backdrop-filter: blur(14px);
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
 }
 
 .title {
-  margin-bottom: 2rem;
-  font-size: clamp(3rem, 8vw, 8rem);
-  text-align: center;
-  color: $light-gold;
+  margin: 0;
+  font-size: clamp(3.4rem, 10vw, 9rem);
+  line-height: .86;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -.07em;
+  color: transparent;
+  background: linear-gradient(92deg, #fff6d8, #ffbd7d 25%, #ffe4f4 50%, #dcd8ff 78%, #fff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-shadow: 0 0 60px rgba(255, 186, 128, .12);
 }
 
-/* Masonry parent container */
+.subtitle {
+  max-width: 52rem;
+  margin: 0;
+  color: rgba(255,248,242,.68);
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: clamp(.95rem, 2vw, 1.08rem);
+  line-height: 1.8;
+}
+
+.uploadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  border: 1px solid rgba(255,255,255,.16);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
+  color: #fff8f2;
+  padding: .82rem 1.1rem;
+  font-family: var(--font-space), system-ui, sans-serif;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  box-shadow: 0 16px 50px rgba(0,0,0,.22);
+  backdrop-filter: blur(16px);
+  transition: border-color .25s ease, background .25s ease;
+}
+
+.uploadButton:hover:not(:disabled) {
+  border-color: rgba(255,211,161,.56);
+  background: rgba(255,177,95,.14);
+}
+
+.uploadButton:disabled {
+  opacity: .55;
+  cursor: progress;
+}
+
 .masonryList {
-  /* Adjust the column-count as needed */
   column-count: 3;
   column-gap: 1rem;
 
-  /* Responsive example (optional): 
-     You can reduce columns on smaller screens */
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     column-count: 2;
-    column-gap: 0.5rem;
   }
-  @media (max-width: 480px) {
-    column-count: 2;
-    column-gap: 0.25rem;
+
+  @media (max-width: 560px) {
+    column-count: 1;
   }
 }
 
-/* Each "item" needs to break out on its own
-   so we use `break-inside: avoid` */
 .masonryItem {
-  display: inline-block; /* ensure images flow properly inside columns */
-  margin-bottom: 1rem;
+  display: inline-block;
   width: 100%;
-  break-inside: avoid; /* crucial for masonry! */
+  margin-bottom: 1rem;
+  break-inside: avoid;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 1.35rem;
   overflow: hidden;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 22px 80px rgba(0,0,0,.28);
+  transform: translateZ(0);
+  transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease;
+}
 
-  /* You can add hover effects etc. */
-  &:hover .image {
-    transform: scale(1.05);
-  }
-
-  @media (max-width: 768px) {
-    margin-bottom: 0rem;
-  }
+.masonryItem:hover {
+  transform: translateY(-5px) scale(1.01);
+  border-color: rgba(255,211,161,.42);
+  box-shadow: 0 30px 100px rgba(0,0,0,.38), 0 0 60px rgba(174,149,255,.12);
 }
 
 .image {
   width: 100%;
   height: auto;
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform .55s ease, filter .55s ease;
+}
+
+.masonryItem:hover .image {
+  transform: scale(1.055);
+  filter: saturate(1.08) contrast(1.04);
 }
 
 .lightbox {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  z-index: 80;
   display: flex;
-  align-items: center;      /* Vertically centers children */
-  justify-content: center;  /* Horizontally centers children */
-  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 2, 10, .82);
   cursor: pointer;
+  backdrop-filter: blur(18px);
 }
 
 .lightboxBackground {
   position: fixed;
   inset: 0;
+  z-index: -1;
   background-size: cover;
   background-position: center;
-  z-index: -1;
-  opacity: 0.3;
+  opacity: .30;
+  filter: blur(26px) saturate(1.22);
+  transform: scale(1.08);
 }
 
 .lightboxContent {
-  /* A flex container holding the actual image + controls */
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* 
-    This is optional but sometimes helps 
-    group the image/buttons for easy styling 
-  */
+  display: grid;
+  place-items: center;
+  width: min(1100px, calc(100vw - 2rem));
+  max-height: calc(100svh - 2rem);
 }
 
 .lightboxImage {
-  display: block;       /* Important: block-level to avoid any inline offset */
-  max-width: 80%;
-  max-height: 80%;
-  object-fit: contain;  /* Prevents distortion */
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  display: block;
+  max-width: min(100%, 1050px);
+  max-height: 84svh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 1.4rem;
+  border: 1px solid rgba(255,255,255,.16);
+  box-shadow: 0 34px 120px rgba(0,0,0,.60);
 }
 
-/* Buttons */
 .closeButton,
 .prevButton,
-.nextButton {
-  position: absolute;
-  color: white;
-  font-size: 2rem;
-  background: none;
-  border: none;
+.nextButton,
+.deleteButton {
+  position: fixed;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 999px;
+  background: rgba(255,255,255,.09);
+  color: #fff8f2;
+  font-size: 1.7rem;
   cursor: pointer;
+  backdrop-filter: blur(14px);
+  transition: background .25s ease, border-color .25s ease;
 }
 
-.closeButton {
-  top: 3rem;
-  right: 1rem;
+.closeButton:hover,
+.prevButton:hover,
+.nextButton:hover {
+  border-color: rgba(255,211,161,.46);
+  background: rgba(255,255,255,.15);
+}
 
-  @media (max-width: 768px) {
-    top: 5rem;
-    right: 2rem;
+.deleteButton:hover {
+  border-color: rgba(255,105,130,.56);
+  background: rgba(255,70,100,.18);
+}
+
+.closeButton { top: 1.2rem; right: 1.2rem; }
+.deleteButton { top: 1.2rem; right: 4.8rem; }
+.prevButton { left: 1.2rem; top: 50%; translate: 0 -50%; }
+.nextButton { right: 1.2rem; top: 50%; translate: 0 -50%; }
+
+@media (max-width: 760px) {
+  .closeButton,
+  .deleteButton {
+    top: auto;
+    bottom: 1rem;
   }
-}
 
-.prevButton {
-  left: 1rem;
-}
+  .prevButton,
+  .nextButton {
+    top: auto;
+    bottom: 1rem;
+    translate: 0;
+  }
 
-.nextButton {
-  right: 1rem;
+  .prevButton { left: 1rem; }
+  .nextButton { right: 8.6rem; }
 }

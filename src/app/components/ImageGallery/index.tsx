@@ -96,13 +96,14 @@ const ImageGallery = () => {
 
   return (
     <div className={styles.galleryWrapper}>
-      <h2 className={styles.title}>Gallery</h2>
-
-      <div className='mb-4'>
+      <div className={styles.header}>
+        <span className={styles.kicker}>Moonlight memories</span>
+        <h2 className={styles.title}>Gallery</h2>
+        <p className={styles.subtitle}>A softer archive for the moments around the poems — images, light, memories and the little pieces of the universe that belong to the Sun and the Moon.</p>
         <button
           onClick={handleButtonClick}
           disabled={uploading}
-          className='inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 transition'
+          className={styles.uploadButton}
         >
           <RiUploadCloud2Line size={24} />
           {uploading ? 'Uploading...' : 'Upload Image'}
@@ -186,7 +187,7 @@ const ImageGallery = () => {
                 <RiArrowRightCircleLine />
               </button>
               <button
-                className={`${styles.closeButton} !right-16 !top-3`}
+                className={styles.deleteButton}
                 onClick={() => handleDelete(images[selectedIndex].public_id)}
                 title='Delete image'
                 aria-label='Delete image'

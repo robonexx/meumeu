@@ -1,13 +1,27 @@
-.gallery {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    width: 100%;
+.galleryPage {
+  position: relative;
+  min-height: 100svh;
+  width: 100vw;
+  overflow-x: hidden;
+  padding: clamp(6rem, 10vw, 8rem) clamp(1rem, 4vw, 4rem) 4rem;
+  color: #fff8f2;
+  background:
+    radial-gradient(circle at 16% 12%, rgba(255, 177, 95, .18), transparent 30rem),
+    radial-gradient(circle at 84% 8%, rgba(174, 149, 255, .20), transparent 28rem),
+    linear-gradient(135deg, #06030f, #100821 48%, #03020a);
+}
 
-    @media (max-width: 60em) {
-      padding: 6rem 1rem 6rem;
-    }
+.galleryAura {
+  position: fixed;
+  inset: -20vh -20vw;
+  pointer-events: none;
+  background: conic-gradient(from 180deg, transparent, rgba(255,177,95,.18), rgba(177,149,255,.20), transparent, rgba(255,95,126,.12), transparent);
+  filter: blur(44px);
+  opacity: .75;
+  animation: galleryAura 22s ease-in-out infinite alternate;
+}
+
+@keyframes galleryAura {
+  from { transform: rotate(-8deg) scale(1); }
+  to { transform: rotate(8deg) scale(1.08); }
 }

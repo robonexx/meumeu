@@ -10,6 +10,7 @@
   );
   --background: #060606;
   --foreground: #c8c8c8;
+  --color-light-gold: #B8A054;
 }
 
 ::-webkit-scrollbar {
@@ -62,5 +63,23 @@ body {
   overflow-x: hidden;
   background-color: #000;
   color: var(--color-dark-100);
-  font-family: var(--font-semibold);
+  font-family: var(--font-space), system-ui, sans-serif;
+}
+
+::selection {
+  background: rgba(255, 183, 111, 0.38);
+  color: #fff8f2;
+}
+
+body {
+  min-height: 100svh;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255, 177, 95, .12), transparent 30rem),
+    radial-gradient(circle at 82% 12%, rgba(167, 145, 255, .14), transparent 28rem),
+    #03020a;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }

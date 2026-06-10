@@ -1,227 +1,23 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus } from 'lucide-react';
-import PoemModal from '../components/PoemModal';
-import '../page.scss';
-
-interface Poem {
-  id: string;
-  title?: string;
-  content: string;
-  date: string;
-}
-
-function useTypewriter(text: string, active: boolean, speed = 32) {
-  const [displayed, setDisplayed] = useState('');
-  useEffect(() => {
-    if (!active) return setDisplayed('');
-    setDisplayed('');
-    let i = 0;
-    const interval = setInterval(() => {
-      setDisplayed(text.slice(0, i + 1));
-      i++;
-      if (i >= text.length) clearInterval(interval);
-    }, speed);
-    return () => clearInterval(interval);
-  }, [text, active, speed]);
-  return displayed;
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
+import { useEffect, useState } from 'react';
+import CelestialPoemExperience from '../components/CelestialPoemExperience';
 
 export default function MoonPage() {
-  const [poems, setPoems] = useState<Poem[]>([]);
-  const [open, setOpen] = useState(false);
-  const [editPoem, setEditPoem] = useState<Poem | null>(null);
-  const [activeIdx, setActiveIdx] = useState(0);
   const [isRob, setIsRob] = useState(false);
-  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsRob(
-        localStorage.getItem('user') === process.env.NEXT_PUBLIC_ROB_USER
-      );
-    }
+    setIsRob(localStorage.getItem('user') === process.env.NEXT_PUBLIC_ROB_USER);
   }, []);
-
-  useEffect(() => {
-    const fetchPoems = async () => {
-      const res = await fetch('/api/posts?category=moon');
-      const data: Poem[] = await res.json();
-
-      if (data.length) {
-        const sorted = data.sort(
-          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
-        const [latest, ...rest] = sorted;
-        const shuffledRest = shuffle(rest);
-        setPoems([latest, ...shuffledRest]);
-      }
-    };
-    fetchPoems();
-  }, []);
-
-  useEffect(() => {
-    const onScroll = () => {
-      const container = containerRef.current;
-      if (!container) return;
-      const { scrollLeft, clientWidth } = container;
-      const idx = Math.round(scrollLeft / clientWidth);
-      setActiveIdx(idx);
-    };
-
-    const el = containerRef.current;
-    if (el) el.addEventListener('scroll', onScroll);
-    return () => el?.removeEventListener('scroll', onScroll);
-  }, []);
-
-  const refetchPoems = async () => {
-    const res = await fetch('/api/posts?category=moon');
-    const data: Poem[] = await res.json();
-
-    if (data.length) {
-      const sorted = data.sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
-      const [latest, ...rest] = sorted;
-      const shuffledRest = shuffle(rest);
-      setPoems([latest, ...shuffledRest]);
-    }
-  };
-
-  const handleAdd = async (title: string, content: string) => {
-    await fetch('/api/posts', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        title,
-        content,
-        category: 'moon',
-        author: 'Rob',
-      }),
-    });
-    setOpen(false);
-    refetchPoems();
-  };
-
-  const handleUpdate = async (id: string, title: string, content: string) => {
-    await fetch('/api/posts', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id, title, content }),
-    });
-    setEditPoem(null);
-    refetchPoems();
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this poem?')) return;
-    await fetch('/api/posts', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    });
-    refetchPoems();
-  };
-
-  const activePoem = poems[activeIdx];
-  const typewriterText = useTypewriter(activePoem?.content || '', true, 32);
 
   return (
-    <main className='min-h-screen w-screen grid items-center bg-transparent  text-white relative overflow-hidden'>
-       <div className='video-bg'>
-        <video autoPlay muted loop playsInline>
-          <source src='/sky.webm' type='video/webm' />
-        </video>
-      </div>
-      {isRob && (
-        <button
-          onClick={() => setOpen(true)}
-          className='fixed bottom-4 right-4 p-4 bg-gray-700 text-white rounded-full shadow-lg hover:bg-gray-600 transition z-50'
-          title='Add new poem'
-          aria-label='Add new poem'
-        >
-          <Plus size={24} />
-        </button>
-      )}
-
-      <div
-        ref={containerRef}
-        className='flex overflow-x-auto snap-x snap-mandatory w-screen h-screen'
-        style={{ scrollBehavior: 'smooth' }}
-      >
-        {poems.map((p, idx) => (
-          <div
-            key={p.id || idx}
-            className='snap-start w-screen min-h-screen flex-shrink-0 flex justify-center items-center px-4'
-          >
-            <AnimatePresence mode='wait'>
-              {idx === activeIdx && (
-                <motion.div
-                  key={p.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -30 }}
-                  transition={{ duration: 0.6, ease: 'easeInOut' }}
-                  className='max-w-2xl sm:max-w-sm text-center mx-auto'
-                >
-                  <p className='md:text-xl text-lg text-gray-300 dark:text-gray-200 leading-relaxed whitespace-pre-line mb-6 break-words max-h-[70vh] overflow-y-auto'>
-                    {typewriterText}
-                  </p>
-                  <small className='text-gray-500 dark:text-gray-400 block mb-6'>
-                    {new Date(p.date).toLocaleString()}
-                  </small>
-                  {isRob && (
-                    <div className='flex justify-center gap-4'>
-                      <button
-                        className='text-blue-500 underline text-lg'
-                        onClick={() => setEditPoem(p)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className='text-red-500 underline text-lg'
-                        onClick={() => handleDelete(p.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        ))}
-      </div>
-
-      {isRob && (
-        <>
-          <PoemModal
-            open={open}
-            onClose={() => setOpen(false)}
-            onSubmit={handleAdd}
-          />
-          <PoemModal
-            open={!!editPoem}
-            onClose={() => setEditPoem(null)}
-            onSubmit={(title, content) => {
-              if (editPoem) handleUpdate(editPoem.id, title, content);
-            }}
-            initialTitle={editPoem?.title}
-            initialContent={editPoem?.content}
-          />
-        </>
-      )}
-    </main>
+    <CelestialPoemExperience
+      category='moon'
+      author='Rob'
+      canEdit={isRob}
+      introLabel='The Moon Page · poems from the Sun'
+      emptyTitle='The Moon is waiting'
+      emptyText='Här kommer dina dikter från MongoDB att landa. Tills dess svävar sidan i stilla månljus, redo för nästa ord från solen.'
+    />
   );
 }
