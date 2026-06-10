@@ -51,7 +51,7 @@ function formatDate(date: string) {
 
 function AnimatedPoemText({ text, activeKey }: { text: string; activeKey: string }) {
   const textRef = useRef<HTMLParagraphElement | null>(null);
-  const chars = useMemo(() => Array.from(text), [text]);
+  const lines = useMemo(() => text.split('\n'), [text]);
 
   useEffect(() => {
     const root = textRef.current;
@@ -59,51 +59,91 @@ function AnimatedPoemText({ text, activeKey }: { text: string; activeKey: string
     const letters = gsap.utils.toArray<HTMLElement>(root.querySelectorAll('[data-char="true"]'));
     if (!letters.length) return;
 
-    gsap.set(letters, {
-      opacity: 0,
-      x: () => gsap.utils.random(-420, 420),
-      y: () => gsap.utils.random(-240, 240),
-      z: () => gsap.utils.random(-180, -60),
-      rotate: () => gsap.utils.random(-50, 50),
-      scale: () => gsap.utils.random(0.66, 1.4),
-      filter: 'blur(14px)',
-    });
+    const isMobile = window.matchMedia('(max-width: 760px)').matches;
 
-    const tween = gsap.to(letters, {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      z: 0,
-      rotate: 0,
-      scale: 1,
-      filter: 'blur(0px)',
-      duration: 1.35,
-      ease: 'power3.out',
-      stagger: {
-        each: 0.006,
-        from: 'random',
+    gsap.killTweensOf(letters);
+    gsap.set(letters, { clearProps: 'all' });
+
+    const tween = gsap.fromTo(
+      letters,
+      {
+        opacity: 0,
+        x: () => gsap.utils.random(isMobile ? -46 : -120, isMobile ? 46 : 120),
+        y: () => gsap.utils.random(isMobile ? -38 : -86, isMobile ? 38 : 86),
+        z: () => gsap.utils.random(-120, -26),
+        rotate: () => gsap.utils.random(isMobile ? -10 : -18, isMobile ? 10 : 18),
+        scale: () => gsap.utils.random(0.9, 1.08),
+        filter: 'blur(10px)',
       },
-    });
+      {
+        opacity: 1,
+        x: 0,
+        y: 0,
+        z: 0,
+        rotate: 0,
+        scale: 1,
+        filter: 'blur(0px)',
+        duration: 1.05,
+        ease: 'power3.out',
+        overwrite: 'auto',
+        force3D: true,
+        stagger: {
+          each: isMobile ? 0.0035 : 0.005,
+          from: 'random',
+        },
+        onComplete: () => {
+          gsap.set(letters, { clearProps: 'transform,filter,opacity' });
+        },
+      }
+    );
 
     return () => {
       tween.kill();
+      gsap.set(letters, { clearProps: 'transform,filter,opacity' });
     };
   }, [activeKey]);
 
   return (
     <p ref={textRef} className={styles.poemText} aria-label={text}>
-      {chars.map((char, index) => {
-        if (char === '\n') return <br key={`${activeKey}-br-${index}`} />;
-        if (char === ' ') return <span key={`${activeKey}-sp-${index}`} className={styles.space} aria-hidden='true' />;
-        return (
-          <span key={`${activeKey}-${index}`} className={styles.char} data-char='true' aria-hidden='true'>
-            {char}
-          </span>
-        );
-      })}
+      {lines.map((line, lineIndex) => (
+        <span key={`${activeKey}-line-${lineIndex}`} className={styles.line}>
+          {line.split(/(\s+)/).map((part, partIndex) => {
+            if (!part) return null;
+
+            if (/^\s+$/.test(part)) {
+              return (
+                <span
+                  key={`${activeKey}-space-${lineIndex}-${partIndex}`}
+                  className={styles.wordSpace}
+                  aria-hidden='true'
+                >
+                  {part}
+                </span>
+              );
+            }
+
+            return (
+              <span key={`${activeKey}-word-${lineIndex}-${partIndex}`} className={styles.word}>
+                {Array.from(part).map((char, charIndex) => (
+                  <span
+                    key={`${activeKey}-char-${lineIndex}-${partIndex}-${charIndex}`}
+                    className={styles.char}
+                    data-char='true'
+                    aria-hidden='true'
+                  >
+                    {char}
+                  </span>
+                ))}
+              </span>
+            );
+          })}
+          {lineIndex < lines.length - 1 && <br />}
+        </span>
+      ))}
     </p>
   );
 }
+
 
 export default function CelestialPoemExperience({
   category,
