@@ -133,13 +133,13 @@
   display: inline-flex;
   align-items: center;
   gap: .65rem;
-  padding: .55rem 1rem;
+  padding: .46rem .86rem;
   border: 1px solid rgba(255,255,255,.16);
   border-radius: 999px;
   background: rgba(255,255,255,.06);
   color: rgba(255,248,242,.72);
   backdrop-filter: blur(14px);
-  font-size: .72rem;
+  font-size: .64rem;
   line-height: 1;
   letter-spacing: .22em;
   text-transform: uppercase;
@@ -205,7 +205,7 @@
     0 30px 100px rgba(0,0,0,.40),
     inset 0 1px 0 rgba(255,255,255,.24);
   backdrop-filter: blur(22px) saturate(1.2);
-  padding: clamp(1.4rem, 4vw, 4.8rem);
+  padding: clamp(1.25rem, 4vw, 4.2rem);
   transform-style: preserve-3d;
 }
 
@@ -236,7 +236,7 @@
 .poemTitle {
   margin: 0 0 clamp(1rem, 2vw, 1.65rem);
   font-family: var(--font-cinzel), Georgia, serif;
-  font-size: clamp(2.15rem, 5vw, 5.2rem);
+  font-size: clamp(1.65rem, 3.8vw, 3.6rem);
   font-weight: 500;
   font-style: normal;
   letter-spacing: .035em;
@@ -251,8 +251,8 @@
 }
 
 .poemText {
-  margin: 0 auto;
-  max-width: 780px;
+  margin: auto;
+  max-width: 820px;
   flex: 1 1 auto;
   min-height: 0;
   max-height: none;
@@ -260,7 +260,7 @@
   white-space: pre-wrap;
   text-align: center;
   font-family: var(--font-didone), 'Antic Didone', Didot, Georgia, serif;
-  font-size: clamp(1.16rem, 2.25vw, 2.15rem);
+  font-size: clamp(1.12rem, 2vw, 1.92rem);
   font-weight: 500;
   line-height: 1.72;
   color: rgba(255,248,242,.92);
@@ -289,7 +289,7 @@
   margin-top: clamp(1.2rem, 3vw, 2rem);
   text-align: center;
   color: rgba(255,248,242,.48);
-  font-size: .72rem;
+  font-size: .64rem;
   letter-spacing: .18em;
   text-transform: uppercase;
 }
@@ -440,7 +440,7 @@
   .kicker {
     max-width: calc(100vw - 2rem);
     letter-spacing: .14em;
-    font-size: .62rem;
+    font-size: .56rem;
   }
 
   .hero {
@@ -458,13 +458,13 @@
     max-width: calc(100vw - .5rem);
     height: calc(100svh - 10.2rem);
     max-height: calc(100svh - 10.2rem);
-    padding: 1.25rem .9rem 1.35rem;
+    padding: 1.15rem 1rem 1.25rem;
     border-radius: 1.25rem;
   }
 
   .poemText {
     max-height: none;
-    font-size: clamp(1.05rem, 4.4vw, 1.28rem);
+    font-size: clamp(1.03rem, 4.25vw, 1.22rem);
     line-height: 1.68;
     text-align: left;
   }

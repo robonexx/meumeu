@@ -231,9 +231,7 @@ export default function CelestialPoemExperience({
                       exit={{ opacity: 0, rotateY: 18, scale: 0.96, filter: 'blur(18px)' }}
                       transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}
                     >
-                      <h1 className={styles.poemTitle}>{poem.title || 'My Moon'}</h1>
                       <AnimatedPoemText text={poem.content} activeKey={poem.id || String(idx)} />
-                      <time className={styles.date} dateTime={poem.date}>{formatDate(poem.date)}</time>
 
                       {canEdit && (
                         <div className={styles.adminActions}>
