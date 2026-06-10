@@ -1,13 +1,19 @@
-import { Cormorant_Garamond, Space_Grotesk, Parisienne } from 'next/font/google';
+import { Space_Grotesk, Cinzel, Antic_Didone } from 'next/font/google';
 import './globals.css';
 import Nav from './components/Nav';
 import ClientAuthWrapper from './client-auth-wrapper';
 
-const cormorant = Cormorant_Garamond({
-  weight: ['300', '400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+const cinzel = Cinzel({
+  weight: ['400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
-  variable: '--font-cormorant',
+  variable: '--font-cinzel',
+  display: 'swap',
+});
+
+const anticDidone = Antic_Didone({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-didone',
   display: 'swap',
 });
 
@@ -18,17 +24,10 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
-const parisienne = Parisienne({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-parisienne',
-  display: 'swap',
-});
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en'>
-      <body className={`${cormorant.variable} ${spaceGrotesk.variable} ${parisienne.variable} antialiased`}>
+      <body className={`${cinzel.variable} ${anticDidone.variable} ${spaceGrotesk.variable} antialiased`}>
         <Nav />
         <ClientAuthWrapper>{children}</ClientAuthWrapper>
       </body>

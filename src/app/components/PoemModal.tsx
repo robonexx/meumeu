@@ -48,7 +48,7 @@ export default function PoemModal({
 
         <div className='relative'>
           <p className='mb-2 text-xs uppercase tracking-[0.24em] text-white/45'>Moon archive</p>
-          <h2 className='mb-6 font-[family-name:var(--font-cormorant)] text-4xl font-bold italic tracking-[-0.04em] text-[#fff0c8] sm:text-5xl'>
+          <h2 className='mb-6 font-[family-name:var(--font-didone)] text-4xl font-semibold tracking-[0.08em] uppercase text-[#fff0c8] sm:text-5xl'>
             {initialTitle || initialContent ? 'Edit poem' : 'New poem'}
           </h2>
 
@@ -76,7 +76,7 @@ export default function PoemModal({
                 name='content'
                 placeholder='Write something from the Sun to the Moon...'
                 rows={10}
-                className='min-h-64 resize-y rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 font-[family-name:var(--font-cormorant)] text-lg leading-8 text-white outline-none transition placeholder:text-white/28 focus:border-[#b9a8ff]/60 focus:bg-white/[0.09]'
+                className='min-h-64 resize-y rounded-2xl border border-white/12 bg-white/[0.06] px-4 py-3 font-[family-name:var(--font-didone)] text-lg leading-8 text-white outline-none transition placeholder:text-white/28 focus:border-[#b9a8ff]/60 focus:bg-white/[0.09]'
                 required
                 value={content}
                 onChange={(e) => setContent(e.target.value)}

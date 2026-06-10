@@ -61,21 +61,23 @@ function AnimatedPoemText({ text, activeKey }: { text: string; activeKey: string
 
     gsap.set(letters, {
       opacity: 0,
-      x: () => gsap.utils.random(-260, 260),
-      y: () => gsap.utils.random(-170, 170),
-      rotate: () => gsap.utils.random(-42, 42),
-      scale: () => gsap.utils.random(0.72, 1.34),
-      filter: 'blur(12px)',
+      x: () => gsap.utils.random(-420, 420),
+      y: () => gsap.utils.random(-240, 240),
+      z: () => gsap.utils.random(-180, -60),
+      rotate: () => gsap.utils.random(-50, 50),
+      scale: () => gsap.utils.random(0.66, 1.4),
+      filter: 'blur(14px)',
     });
 
     const tween = gsap.to(letters, {
       opacity: 1,
       x: 0,
       y: 0,
+      z: 0,
       rotate: 0,
       scale: 1,
       filter: 'blur(0px)',
-      duration: 1.25,
+      duration: 1.35,
       ease: 'power3.out',
       stagger: {
         each: 0.006,
@@ -118,10 +120,23 @@ export default function CelestialPoemExperience({
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const refetchPoems = async () => {
-    const res = await fetch(`/api/posts?category=${category}`);
-    const data: Poem[] = await res.json();
-    setPoems(normalizePoems(data));
-    setActiveIdx(0);
+    try {
+      const res = await fetch(`/api/posts?category=${category}`, { cache: 'no-store' });
+
+      if (!res.ok) {
+        const message = await res.text();
+        console.error(`[poems] Could not fetch ${category} poems`, res.status, message.slice(0, 160));
+        setPoems([]);
+        return;
+      }
+
+      const data: Poem[] = await res.json();
+      setPoems(normalizePoems(Array.isArray(data) ? data : []));
+      setActiveIdx(0);
+    } catch (error) {
+      console.error(`[poems] Fetch failed for ${category}`, error);
+      setPoems([]);
+    }
   };
 
   useEffect(() => {

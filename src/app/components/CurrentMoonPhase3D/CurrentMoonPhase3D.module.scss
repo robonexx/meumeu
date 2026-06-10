@@ -1,9 +1,9 @@
 .moonPanel {
-  width: min(1120px, calc(100vw - 1rem));
-  min-height: min(760px, 92svh);
+  width: min(1160px, calc(100vw - 1rem));
+  min-height: min(680px, 78svh);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(320px, .92fr);
+  grid-template-columns: minmax(0, .98fr) minmax(320px, .92fr);
   align-items: center;
   gap: clamp(1rem, 3vw, 3rem);
   padding: clamp(.55rem, 2vw, 1.2rem);
@@ -22,13 +22,13 @@
 }
 
 .canvasWrap {
-  width: min(560px, 90vw);
-  height: min(560px, 90vw);
+  width: min(540px, 88vw);
+  height: min(540px, 88vw);
   justify-self: center;
   position: relative;
   border-radius: 50%;
   overflow: visible;
-  filter: drop-shadow(0 0 80px rgba(188, 170, 255, .35));
+  filter: drop-shadow(0 0 54px rgba(188, 170, 255, .22)) drop-shadow(0 0 22px rgba(255, 241, 210, .12));
 }
 
 .canvasWrap canvas {
@@ -53,20 +53,31 @@
   display: inline-flex;
   margin-bottom: .85rem;
   color: rgba(255,247,232,.64);
-  font-family: var(--font-space), system-ui, sans-serif;
+  font-family: var(--font-cinzel), system-ui, serif;
   font-size: .72rem;
   letter-spacing: .2em;
   text-transform: uppercase;
 }
 
 .infoCard h2 {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
   margin: 0 0 1.3rem;
-  font-family: var(--font-parisienne), var(--font-cormorant), Georgia, serif;
+  font-family: var(--font-cinzel), Georgia, serif;
   color: #fff3d0;
-  font-size: clamp(3rem, 7vw, 6rem);
-  line-height: .9;
-  font-weight: 400;
+  font-size: clamp(2rem, 5vw, 4.2rem);
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: .03em;
+  text-transform: uppercase;
   text-shadow: 0 0 42px rgba(255,191,124,.22);
+}
+
+.infoCard h2 span {
+  font-family: var(--font-cinzel), system-ui, serif;
+  font-size: clamp(1.9rem, 4vw, 3.1rem);
+  line-height: 1;
 }
 
 .metaGrid {
@@ -87,7 +98,7 @@
   display: block;
   margin-bottom: .28rem;
   color: rgba(255,248,242,.52);
-  font-family: var(--font-space), system-ui, sans-serif;
+  font-family: var(--font-cinzel), system-ui, serif;
   font-size: .65rem;
   letter-spacing: .14em;
   text-transform: uppercase;
@@ -96,7 +107,7 @@
 .metaGrid strong {
   display: block;
   color: rgba(255,248,242,.94);
-  font-family: var(--font-cormorant), Georgia, serif;
+  font-family: var(--font-didone), 'Antic Didone', Didot, Georgia, serif;
   font-size: clamp(1rem, 2vw, 1.25rem);
   font-weight: 600;
   line-height: 1.2;
@@ -107,14 +118,13 @@
     min-height: auto;
     grid-template-columns: 1fr;
     gap: 0;
-    padding: 0 .25rem 1rem;
+    padding: 0 .25rem .85rem;
   }
 
   .canvasWrap {
-    width: min(94vw, 430px);
-    height: min(94vw, 430px);
-    margin-top: .3rem;
-    margin-bottom: -1.2rem;
+    width: min(86vw, 360px);
+    height: min(86vw, 360px);
+    margin: .25rem auto .35rem;
   }
 
   .infoCard {
@@ -123,7 +133,10 @@
   }
 
   .infoCard h2 {
-    font-size: clamp(3rem, 16vw, 4.8rem);
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+    font-size: clamp(2.1rem, 11vw, 3.45rem);
   }
 
   .metaGrid {

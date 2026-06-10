@@ -71,7 +71,9 @@ function AnimatedHomePoem() {
       delay: .4,
     });
 
-    return () => tween.kill();
+    return () => {
+      tween.kill();
+    };
   }, []);
 
   return (
@@ -106,10 +108,7 @@ export default function Home() {
           transition={{ duration: .9, ease: [0.22, 1, 0.36, 1] }}
         >
           <span className='homeKicker'>The Sun writes to his Moon</span>
-          <h1>
-            Meu Meu
-            <span>Moon Page</span>
-          </h1>
+          <h1>Meu Meu</h1>
           <p className='homeLead'>A small universe for love, moonlight, memories and poems written from my soul to yours.</p>
         </motion.div>
 

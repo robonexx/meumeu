@@ -17,7 +17,7 @@ export default function Nav() {
       <div className='flex items-center justify-between gap-2'>
         <Link
           href='/'
-          className='group flex items-center gap-2 rounded-full px-3 py-2 font-[family-name:var(--font-cormorant)] text-base font-bold tracking-tight text-[#fff3d7] transition-colors hover:bg-white/10 sm:text-xl'
+          className='group flex items-center gap-2 rounded-full px-3 py-2 font-[family-name:var(--font-didone)] text-base font-bold tracking-tight text-[#fff3d7] transition-colors hover:bg-white/10 sm:text-xl'
         >
           <span className='grid h-8 w-8 place-items-center rounded-full bg-gradient-to-br from-[#ffd99a] via-[#ff8a70] to-[#b8a8ff] text-sm text-[#100716] shadow-[0_0_30px_rgba(255,190,132,.35)]'>
             ☀︎

@@ -2,152 +2,295 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
+import SunCalc from 'suncalc';
 import styles from './CurrentMoonPhase3D.module.scss';
 
-const SYNODIC_MONTH = 29.53058867;
-const NEW_MOON_REFERENCE_UTC = Date.UTC(2000, 0, 6, 18, 14, 0);
-const DAY = 1000 * 60 * 60 * 24;
+const { getMoonIllumination, getMoonPosition } = SunCalc;
 
-type MoonInfo = {
-  age: number;
-  phase: number;
-  illumination: number;
-  name: string;
-  nextFullMoon: Date;
+type MoonPhase = {
+  start: number;
+  end: number;
+  phase: string;
+  emoji: string;
 };
 
-function getMoonName(age: number) {
-  if (age < 1.84566) return 'New Moon';
-  if (age < 5.53699) return 'Waxing Crescent';
-  if (age < 9.22831) return 'First Quarter';
-  if (age < 12.91963) return 'Waxing Gibbous';
-  if (age < 16.61096) return 'Full Moon';
-  if (age < 20.30228) return 'Waning Gibbous';
-  if (age < 23.99361) return 'Last Quarter';
-  if (age < 27.68493) return 'Waning Crescent';
-  return 'New Moon';
+type PhaseEvent = {
+  label: string;
+  emoji: string;
+  targetPhase: number;
+  date: Date;
+};
+
+const MS_PER_HOUR = 60 * 60 * 1000;
+const MS_PER_DAY = 24 * MS_PER_HOUR;
+const STOCKHOLM_LAT = 59.3293;
+const STOCKHOLM_LON = 18.0686;
+
+const DEFAULT_ROT_X_DEG = -72.4;
+const DEFAULT_ROT_Y_DEG = 154;
+const DEFAULT_ROT_Z_DEG = -71.3;
+const MOON_BASE_ROTATION_Y = Math.PI / 2;
+const DEFAULT_DISPLACEMENT_SCALE = 0.03;
+const DEFAULT_DISPLACEMENT_BIAS = 0;
+const MOON_BUMP_SCALE = 3;
+const MOON_BLACK_POINT = 0.06;
+const MOON_WHITE_POINT = 1.0;
+const MOON_SATURATION = 1.0;
+const MOON_VIBRANCE = -0.44;
+const LIGHT_INTENSITY = 3.2;
+const CAMERA_FOV_DEG = 0.5;
+const CAMERA_DISTANCE = 880;
+const CAMERA_DISTANCE_MOBILE = 1320;
+const MOBILE_BREAKPOINT = 768;
+
+const moonPhases: MoonPhase[] = [
+  { start: 0.0, end: 0.02, phase: 'New Moon', emoji: '🌑' },
+  { start: 0.02, end: 0.25, phase: 'Waxing Crescent', emoji: '🌒' },
+  { start: 0.25, end: 0.27, phase: 'First Quarter', emoji: '🌓' },
+  { start: 0.27, end: 0.5, phase: 'Waxing Gibbous', emoji: '🌔' },
+  { start: 0.5, end: 0.52, phase: 'Full Moon', emoji: '🌕' },
+  { start: 0.52, end: 0.75, phase: 'Waning Gibbous', emoji: '🌖' },
+  { start: 0.75, end: 0.77, phase: 'Last Quarter', emoji: '🌗' },
+  { start: 0.77, end: 1.0, phase: 'Waning Crescent', emoji: '🌘' },
+];
+
+const PHASE_EVENTS = [
+  { label: 'New Moon', emoji: '🌑', targetPhase: 0.0 },
+  { label: 'First Quarter', emoji: '🌓', targetPhase: 0.25 },
+  { label: 'Full Moon', emoji: '🌕', targetPhase: 0.5 },
+  { label: 'Last Quarter', emoji: '🌗', targetPhase: 0.75 },
+];
+
+function degToRad(deg: number) {
+  return (deg * Math.PI) / 180;
 }
 
-function calculateMoonInfo(date = new Date()): MoonInfo {
-  const daysSinceReference = (date.getTime() - NEW_MOON_REFERENCE_UTC) / DAY;
-  const rawAge = ((daysSinceReference % SYNODIC_MONTH) + SYNODIC_MONTH) % SYNODIC_MONTH;
-  const phase = rawAge / SYNODIC_MONTH;
-  const illumination = (1 - Math.cos(2 * Math.PI * phase)) / 2;
-  const fullMoonAge = SYNODIC_MONTH / 2;
-  const daysUntilFullMoon = rawAge <= fullMoonAge
-    ? fullMoonAge - rawAge
-    : SYNODIC_MONTH - rawAge + fullMoonAge;
-
-  return {
-    age: rawAge,
-    phase,
-    illumination,
-    name: getMoonName(rawAge),
-    nextFullMoon: new Date(date.getTime() + daysUntilFullMoon * DAY),
-  };
+function phaseDistance(a: number, b: number) {
+  const d = Math.abs(a - b);
+  return Math.min(d, 1 - d);
 }
 
-function formatStockholmDate(date: Date, includeTime = false) {
-  const options: Intl.DateTimeFormatOptions = {
-    timeZone: 'Europe/Stockholm',
-    weekday: 'short',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  };
+function findNearestPhaseTime(center: Date, targetPhase: number, windowDays = 16) {
+  const startMs = center.getTime() - windowDays * MS_PER_DAY;
+  const endMs = center.getTime() + windowDays * MS_PER_DAY;
+  const stepMs = MS_PER_HOUR;
 
-  if (includeTime) {
-    options.hour = '2-digit';
-    options.minute = '2-digit';
+  let bestTimeMs = startMs;
+  let bestDist = Number.POSITIVE_INFINITY;
+
+  for (let t = startMs; t <= endMs; t += stepMs) {
+    const p = getMoonIllumination(new Date(t)).phase;
+    const dist = phaseDistance(p, targetPhase);
+    if (dist < bestDist) {
+      bestDist = dist;
+      bestTimeMs = t;
+    }
   }
 
-  return new Intl.DateTimeFormat('en-GB', options).format(date);
+  let refineStep = stepMs / 2;
+  for (let i = 0; i < 14; i++) {
+    const left = bestTimeMs - refineStep;
+    const right = bestTimeMs + refineStep;
+    const pLeft = getMoonIllumination(new Date(left)).phase;
+    const pRight = getMoonIllumination(new Date(right)).phase;
+    const dLeft = phaseDistance(pLeft, targetPhase);
+    const dRight = phaseDistance(pRight, targetPhase);
+
+    if (dLeft < bestDist) {
+      bestDist = dLeft;
+      bestTimeMs = left;
+    }
+    if (dRight < bestDist) {
+      bestDist = dRight;
+      bestTimeMs = right;
+    }
+    refineStep /= 2;
+  }
+
+  return new Date(bestTimeMs);
+}
+
+function computePhaseEvents(center: Date): PhaseEvent[] {
+  return PHASE_EVENTS.map((def) => ({
+    ...def,
+    date: findNearestPhaseTime(center, def.targetPhase),
+  })).sort((a, b) => a.date.getTime() - b.date.getTime());
+}
+
+function nextFullMoon(center: Date) {
+  const now = center.getTime();
+  const events = computePhaseEvents(center);
+  const upcoming = events.find((event) => event.label === 'Full Moon' && event.date.getTime() >= now);
+  return upcoming?.date ?? findNearestPhaseTime(new Date(now + 15 * MS_PER_DAY), 0.5);
+}
+
+function formatDateTime(date: Date, includeTime = false) {
+  return new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'Europe/Stockholm',
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    ...(includeTime ? { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' } : {}),
+  }).format(date);
+}
+
+function getCameraDistance() {
+  if (typeof window !== 'undefined' && window.innerWidth < MOBILE_BREAKPOINT) return CAMERA_DISTANCE_MOBILE;
+  return CAMERA_DISTANCE;
 }
 
 export default function CurrentMoonPhase3D() {
   const mountRef = useRef<HTMLDivElement | null>(null);
-  const [now, setNow] = useState<Date | null>(null);
+  const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
-    setNow(new Date());
     const timer = window.setInterval(() => setNow(new Date()), 60_000);
     return () => window.clearInterval(timer);
   }, []);
 
-  const moonInfo = useMemo(() => calculateMoonInfo(now ?? new Date()), [now]);
+  const moonInfo = useMemo(() => {
+    const illumination = getMoonIllumination(now);
+    const moonPos = getMoonPosition(now, STOCKHOLM_LAT, STOCKHOLM_LON);
+    const phaseAge = Number(illumination.phase.toFixed(2));
+    const currentPhase = moonPhases.find((phase) => phaseAge >= phase.start && phaseAge < phase.end) ?? moonPhases[0];
+    const fraction = Math.min(1, Math.max(0, illumination.fraction));
+    const phaseAngle = Math.acos(2 * fraction - 1);
+    const earthshineIntensity = 0.12 * Math.pow(1 - fraction, 2.3);
+    const limbAngle = illumination.angle - moonPos.parallacticAngle;
+    const inPlane = Math.sin(phaseAngle);
+    const lightDistance = 10;
+
+    return {
+      phase: illumination.phase,
+      fraction,
+      phaseName: currentPhase.phase,
+      emoji: currentPhase.emoji,
+      distance: Math.round(moonPos.distance).toLocaleString('sv-SE'),
+      nextFullMoon: nextFullMoon(now),
+      earthshineIntensity,
+      light: new THREE.Vector3(
+        -Math.sin(limbAngle) * inPlane * lightDistance,
+        Math.cos(limbAngle) * inPlane * lightDistance,
+        Math.cos(phaseAngle) * lightDistance,
+      ),
+    };
+  }, [now]);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-    camera.position.z = 5.2;
+    const camera = new THREE.PerspectiveCamera(CAMERA_FOV_DEG, 1, 0.1, 1200);
+    camera.position.z = getCameraDistance();
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(mount.clientWidth, mount.clientHeight);
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(mount.clientWidth, mount.clientHeight);
     mount.appendChild(renderer.domElement);
 
     const textureLoader = new THREE.TextureLoader();
-    const moonTexture = textureLoader.load('/moon.png');
-    moonTexture.colorSpace = THREE.SRGBColorSpace;
+    const texture = textureLoader.load('/img/lroc_color_16bit_srgb_8k.webp');
+    const displacementMap = textureLoader.load('/img/ldem_16_uint.webp');
+    texture.colorSpace = THREE.SRGBColorSpace;
+    displacementMap.colorSpace = THREE.NoColorSpace;
 
-    const geometry = new THREE.SphereGeometry(1.48, 96, 96);
+    const maxAniso = renderer.capabilities.getMaxAnisotropy?.() ?? 1;
+    texture.anisotropy = maxAniso;
+
+    const geometry = new THREE.SphereGeometry(2, 96, 96);
     const material = new THREE.MeshStandardMaterial({
-      map: moonTexture,
+      map: texture,
+      displacementMap,
+      displacementScale: DEFAULT_DISPLACEMENT_SCALE,
+      displacementBias: DEFAULT_DISPLACEMENT_BIAS,
+      bumpMap: displacementMap,
+      bumpScale: MOON_BUMP_SCALE,
       roughness: 1,
       metalness: 0,
-      bumpMap: moonTexture,
-      bumpScale: 0.045,
+      emissive: new THREE.Color(0xd7d7dd),
+      emissiveIntensity: moonInfo.earthshineIntensity,
     });
 
+    material.onBeforeCompile = (shader) => {
+      shader.uniforms.uMoonBlackPoint = { value: MOON_BLACK_POINT };
+      shader.uniforms.uMoonWhitePoint = { value: MOON_WHITE_POINT };
+      shader.uniforms.uMoonSaturation = { value: MOON_SATURATION };
+      shader.uniforms.uMoonVibrance = { value: MOON_VIBRANCE };
+
+      shader.fragmentShader = shader.fragmentShader.replace(
+        'void main() {',
+        'uniform float uMoonBlackPoint;\nuniform float uMoonWhitePoint;\nuniform float uMoonSaturation;\nuniform float uMoonVibrance;\nvoid main() {'
+      );
+      shader.fragmentShader = shader.fragmentShader.replace(
+        '#include <map_fragment>',
+        [
+          '#include <map_fragment>',
+          'float denom = max(0.0001, (uMoonWhitePoint - uMoonBlackPoint));',
+          'diffuseColor.rgb = clamp((diffuseColor.rgb - uMoonBlackPoint) / denom, 0.0, 1.0);',
+          'vec3 c = diffuseColor.rgb;',
+          'float maxc = max(c.r, max(c.g, c.b));',
+          'float minc = min(c.r, min(c.g, c.b));',
+          'float satAmount = maxc - minc;',
+          'float vibFactor = clamp(1.0 + uMoonVibrance * (1.0 - satAmount), 0.0, 3.0);',
+          'float satFinal = clamp(uMoonSaturation * vibFactor, 0.0, 3.0);',
+          'float luma = dot(c, vec3(0.2126, 0.7152, 0.0722));',
+          'diffuseColor.rgb = mix(vec3(luma), c, satFinal);',
+        ].join('\n')
+      );
+    };
+
     const moon = new THREE.Mesh(geometry, material);
-    moon.rotation.y = -0.65;
-    moon.rotation.x = 0.12;
     scene.add(moon);
 
-    const ambient = new THREE.AmbientLight(0xb8b2ff, 0.34);
-    scene.add(ambient);
-
-    const phaseAngle = moonInfo.phase * Math.PI * 2;
-    const light = new THREE.DirectionalLight(0xfff0d1, 3.35);
-    light.position.set(Math.sin(phaseAngle) * 4, 1.1, Math.cos(phaseAngle) * 4);
+    const light = new THREE.DirectionalLight(0xffffff, LIGHT_INTENSITY);
+    light.position.copy(moonInfo.light);
+    scene.add(light.target);
     scene.add(light);
 
-    const rimLight = new THREE.PointLight(0xb9a6ff, 1.8, 10);
-    rimLight.position.set(-2.6, -1.4, 2.5);
-    scene.add(rimLight);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.008);
+    hemiLight.color.setHSL(0.6, 1, 0.6);
+    hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+    scene.add(hemiLight);
 
     const stars = new THREE.BufferGeometry();
-    const starCount = 170;
+    const starCount = 260;
     const positions = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 8;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 8;
-      positions[i * 3 + 2] = -Math.random() * 4 - 1;
+      positions[i * 3] = (Math.random() - 0.5) * 7;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 7;
+      positions[i * 3 + 2] = -Math.random() * 3 - 1;
     }
     stars.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.012, transparent: true, opacity: 0.78 });
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.007, transparent: true, opacity: 0.72 });
     const starField = new THREE.Points(stars, starMaterial);
     scene.add(starField);
 
     let frame = 0;
     const animate = () => {
       frame = requestAnimationFrame(animate);
-      moon.rotation.y += 0.0019;
-      starField.rotation.z += 0.00045;
+      light.position.copy(moonInfo.light);
+      material.emissiveIntensity = moonInfo.earthshineIntensity;
+      moon.rotation.set(
+        degToRad(DEFAULT_ROT_X_DEG),
+        MOON_BASE_ROTATION_Y + degToRad(DEFAULT_ROT_Y_DEG),
+        degToRad(DEFAULT_ROT_Z_DEG),
+      );
+      starField.rotation.z += 0.00025;
       renderer.render(scene, camera);
     };
 
     const resize = () => {
-      if (!mount) return;
       const width = Math.max(mount.clientWidth, 1);
       const height = Math.max(mount.clientHeight, 1);
-      renderer.setSize(width, height);
       camera.aspect = width / height;
+      camera.position.z = getCameraDistance();
       camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
     };
 
     const resizeObserver = new ResizeObserver(resize);
@@ -160,36 +303,37 @@ export default function CurrentMoonPhase3D() {
       resizeObserver.disconnect();
       geometry.dispose();
       material.dispose();
-      moonTexture.dispose();
+      texture.dispose();
+      displacementMap.dispose();
       stars.dispose();
       starMaterial.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [moonInfo.phase]);
+  }, [moonInfo.light, moonInfo.earthshineIntensity]);
 
   return (
-    <section className={styles.moonPanel} aria-label='Current moon phase'>
+    <section className={styles.moonPanel} aria-label='Aktuell månfas'>
       <div className={styles.canvasWrap} ref={mountRef} />
       <div className={styles.infoCard}>
-        <span className={styles.eyebrow}>Current moon phase</span>
-        <h2>{moonInfo.name}</h2>
+        <span className={styles.eyebrow}>Aktuell månfas · svensk tid</span>
+        <h2><span>{moonInfo.emoji}</span>{moonInfo.phaseName}</h2>
         <div className={styles.metaGrid}>
           <div>
-            <span>Date / time</span>
-            <strong>{now ? formatStockholmDate(now, true) : 'Loading...'}</strong>
+            <span>Datum / tid</span>
+            <strong>{formatDateTime(now, true)}</strong>
           </div>
           <div>
-            <span>Illumination</span>
-            <strong>{Math.round(moonInfo.illumination * 100)}%</strong>
+            <span>Upplyst</span>
+            <strong>{(moonInfo.fraction * 100).toFixed(2)}%</strong>
           </div>
           <div>
-            <span>Moon age</span>
-            <strong>{moonInfo.age.toFixed(1)} days</strong>
+            <span>Avstånd</span>
+            <strong>{moonInfo.distance} km</strong>
           </div>
           <div>
-            <span>Next full moon</span>
-            <strong>{formatStockholmDate(moonInfo.nextFullMoon)}</strong>
+            <span>Nästa fullmåne</span>
+            <strong>{formatDateTime(moonInfo.nextFullMoon, true)}</strong>
           </div>
         </div>
       </div>

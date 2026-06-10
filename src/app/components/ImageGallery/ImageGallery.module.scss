@@ -3,7 +3,7 @@
   z-index: 1;
   width: min(1180px, 100%);
   margin: 0 auto;
-  font-family: var(--font-cormorant), Georgia, serif;
+  font-family: var(--font-didone), Georgia, serif;
   color: #fff8f2;
 }
 
@@ -35,8 +35,9 @@
   font-size: clamp(3.4rem, 10vw, 9rem);
   line-height: .86;
   font-weight: 800;
-  font-style: italic;
-  letter-spacing: -.07em;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: .04em;
   color: transparent;
   background: linear-gradient(92deg, #fff6d8, #ffbd7d 25%, #ffe4f4 50%, #dcd8ff 78%, #fff);
   -webkit-background-clip: text;
@@ -48,7 +49,7 @@
   max-width: 52rem;
   margin: 0;
   color: rgba(255,248,242,.68);
-  font-family: var(--font-space), system-ui, sans-serif;
+  font-family: var(--font-cinzel), system-ui, serif;
   font-size: clamp(.95rem, 2vw, 1.08rem);
   line-height: 1.8;
 }
@@ -62,7 +63,7 @@
   background: linear-gradient(135deg, rgba(255,255,255,.14), rgba(255,255,255,.05));
   color: #fff8f2;
   padding: .82rem 1.1rem;
-  font-family: var(--font-space), system-ui, sans-serif;
+  font-family: var(--font-cinzel), system-ui, serif;
   font-size: .82rem;
   font-weight: 700;
   letter-spacing: .13em;
