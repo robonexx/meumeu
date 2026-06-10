@@ -17,7 +17,7 @@ export default function SunPage() {
       canEdit={isErika}
       introLabel='The Sun Page · letters back to the light'
       emptyTitle='The Sun is glowing'
-      emptyText='Här finns plats för svar, minnen och värme. Samma CRUD finns kvar, men upplevelsen är nu mer filmisk och kosmisk.'
+      emptyText='Här vilar en gyllene plats för värme, svar och minnen som ännu väntar på att få börja lysa.'
     />
   );
 }

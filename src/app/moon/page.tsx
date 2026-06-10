@@ -17,7 +17,7 @@ export default function MoonPage() {
       canEdit={isRob}
       introLabel='The Moon Page · poems from the Sun'
       emptyTitle='The Moon is waiting'
-      emptyText='Här kommer dina dikter från MongoDB att landa. Tills dess svävar sidan i stilla månljus, redo för nästa ord från solen.'
+      emptyText='Ännu vilar denna himmel i tystnad. Snart fylls den av ord, ljus och hemligheter skrivna från solen till månen.'
     />
   );
 }

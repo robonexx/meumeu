@@ -1,12 +1,12 @@
 .moonPanel {
-  width: min(1160px, calc(100vw - 1rem));
-  min-height: min(680px, 78svh);
+  width: min(1120px, calc(100vw - 1rem));
+  min-height: min(640px, 74svh);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, .98fr) minmax(320px, .92fr);
+  grid-template-columns: minmax(0, .95fr) minmax(310px, .9fr);
   align-items: center;
-  gap: clamp(1rem, 3vw, 3rem);
-  padding: clamp(.55rem, 2vw, 1.2rem);
+  gap: clamp(.85rem, 2.5vw, 2.4rem);
+  padding: clamp(.45rem, 1.6vw, 1rem);
   position: relative;
   isolation: isolate;
 }
@@ -14,47 +14,48 @@
 .moonPanel::before {
   content: '';
   position: absolute;
-  inset: 8% 10%;
+  inset: 10% 12%;
   border-radius: 999px;
-  background: radial-gradient(circle at 42% 46%, rgba(255,255,255,.18), rgba(187,166,255,.18) 26%, rgba(255,164,95,.08) 48%, transparent 70%);
-  filter: blur(44px);
+  background: radial-gradient(circle at 42% 46%, rgba(255,255,255,.15), rgba(187,166,255,.14) 25%, rgba(255,164,95,.07) 50%, transparent 72%);
+  filter: blur(48px);
   z-index: -1;
 }
 
 .canvasWrap {
-  width: min(540px, 88vw);
-  height: min(540px, 88vw);
+  width: min(455px, 78vw);
+  height: min(455px, 78vw);
   justify-self: center;
   position: relative;
   border-radius: 50%;
   overflow: visible;
-  filter: drop-shadow(0 0 54px rgba(188, 170, 255, .22)) drop-shadow(0 0 22px rgba(255, 241, 210, .12));
+  filter: drop-shadow(0 0 46px rgba(188, 170, 255, .2)) drop-shadow(0 0 18px rgba(255, 241, 210, .1));
 }
 
 .canvasWrap canvas {
   width: 100% !important;
   height: 100% !important;
+  display: block;
 }
 
 .infoCard {
   width: 100%;
   border: 1px solid rgba(255,255,255,.18);
-  border-radius: clamp(1.4rem, 3vw, 2.4rem);
-  padding: clamp(1.1rem, 3vw, 2.2rem);
+  border-radius: clamp(1.35rem, 2.5vw, 2.2rem);
+  padding: clamp(1rem, 2.6vw, 2rem);
   background:
-    linear-gradient(145deg, rgba(255,255,255,.14), rgba(255,255,255,.045)),
-    radial-gradient(circle at 20% 0%, rgba(255,183,111,.16), transparent 42%),
+    linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.04)),
+    radial-gradient(circle at 20% 0%, rgba(255,183,111,.14), transparent 42%),
     rgba(10, 7, 26, .44);
-  box-shadow: 0 30px 90px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.22);
+  box-shadow: 0 28px 82px rgba(0,0,0,.36), inset 0 1px 0 rgba(255,255,255,.2);
   backdrop-filter: blur(24px) saturate(1.18);
 }
 
 .eyebrow {
   display: inline-flex;
-  margin-bottom: .85rem;
+  margin-bottom: .8rem;
   color: rgba(255,247,232,.64);
   font-family: var(--font-cinzel), system-ui, serif;
-  font-size: .72rem;
+  font-size: .7rem;
   letter-spacing: .2em;
   text-transform: uppercase;
 }
@@ -63,10 +64,10 @@
   display: flex;
   flex-direction: column;
   gap: .25rem;
-  margin: 0 0 1.3rem;
+  margin: 0 0 1.2rem;
   font-family: var(--font-cinzel), Georgia, serif;
   color: #fff3d0;
-  font-size: clamp(2rem, 5vw, 4.2rem);
+  font-size: clamp(1.85rem, 4.3vw, 3.65rem);
   line-height: 1;
   font-weight: 500;
   letter-spacing: .03em;
@@ -76,22 +77,22 @@
 
 .infoCard h2 span {
   font-family: var(--font-cinzel), system-ui, serif;
-  font-size: clamp(1.9rem, 4vw, 3.1rem);
+  font-size: clamp(1.65rem, 3.5vw, 2.75rem);
   line-height: 1;
 }
 
 .metaGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: .72rem;
+  gap: .68rem;
 }
 
 .metaGrid div {
   min-width: 0;
-  padding: .95rem;
-  border-radius: 1.1rem;
-  background: rgba(255,255,255,.065);
-  border: 1px solid rgba(255,255,255,.1);
+  padding: .9rem;
+  border-radius: 1rem;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.095);
 }
 
 .metaGrid span {
@@ -99,7 +100,7 @@
   margin-bottom: .28rem;
   color: rgba(255,248,242,.52);
   font-family: var(--font-cinzel), system-ui, serif;
-  font-size: .65rem;
+  font-size: .64rem;
   letter-spacing: .14em;
   text-transform: uppercase;
 }
@@ -108,9 +109,9 @@
   display: block;
   color: rgba(255,248,242,.94);
   font-family: var(--font-didone), 'Antic Didone', Didot, Georgia, serif;
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-size: clamp(.98rem, 1.8vw, 1.18rem);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: 1.22;
 }
 
 @media (max-width: 880px) {
@@ -122,29 +123,26 @@
   }
 
   .canvasWrap {
-    width: min(86vw, 360px);
-    height: min(86vw, 360px);
-    margin: .25rem auto .35rem;
+    width: min(78vw, 310px);
+    height: min(78vw, 310px);
+    margin: .15rem auto .25rem;
   }
 
   .infoCard {
     border-radius: 1.35rem;
-    padding: 1rem;
+    padding: .95rem;
   }
 
   .infoCard h2 {
-  display: flex;
-  flex-direction: column;
-  gap: .25rem;
-    font-size: clamp(2.1rem, 11vw, 3.45rem);
+    font-size: clamp(1.8rem, 9vw, 3rem);
   }
 
   .metaGrid {
     grid-template-columns: 1fr;
-    gap: .55rem;
+    gap: .5rem;
   }
 
   .metaGrid div {
-    padding: .78rem .85rem;
+    padding: .75rem .82rem;
   }
 }

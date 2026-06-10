@@ -14,6 +14,17 @@ type MoonPhase = {
   emoji: string;
 };
 
+type MoonInfo = {
+  phase: number;
+  fraction: number;
+  phaseName: string;
+  emoji: string;
+  distance: string;
+  nextFullMoon: Date;
+  earthshineIntensity: number;
+  light: THREE.Vector3;
+};
+
 type PhaseEvent = {
   label: string;
   emoji: string;
@@ -26,6 +37,7 @@ const MS_PER_DAY = 24 * MS_PER_HOUR;
 const STOCKHOLM_LAT = 59.3293;
 const STOCKHOLM_LON = 18.0686;
 
+// Same baked visual settings as the moon-phase repo.
 const DEFAULT_ROT_X_DEG = -72.4;
 const DEFAULT_ROT_Y_DEG = 154;
 const DEFAULT_ROT_Z_DEG = -71.3;
@@ -38,9 +50,10 @@ const MOON_WHITE_POINT = 1.0;
 const MOON_SATURATION = 1.0;
 const MOON_VIBRANCE = -0.44;
 const LIGHT_INTENSITY = 3.2;
+const HEMISPHERE_LIGHT_INTENSITY = 0.003;
 const CAMERA_FOV_DEG = 0.5;
-const CAMERA_DISTANCE = 880;
-const CAMERA_DISTANCE_MOBILE = 1320;
+const CAMERA_DISTANCE = 1040;
+const CAMERA_DISTANCE_MOBILE = 1500;
 const MOBILE_BREAKPOINT = 768;
 
 const moonPhases: MoonPhase[] = [
@@ -139,8 +152,39 @@ function getCameraDistance() {
   return CAMERA_DISTANCE;
 }
 
+function buildMoonInfo(date: Date): MoonInfo {
+  const illumination = getMoonIllumination(date);
+  const moonPos = getMoonPosition(date, STOCKHOLM_LAT, STOCKHOLM_LON);
+  const phaseAge = Number(illumination.phase.toFixed(2));
+  const currentPhase = moonPhases.find((phase) => phaseAge >= phase.start && phaseAge < phase.end) ?? moonPhases[0];
+
+  // Direct port of the repo's phase-light calculation. This is what creates the visible dark side/terminator.
+  const fraction = Math.min(1, Math.max(0, illumination.fraction));
+  const phaseAngle = Math.acos(2 * fraction - 1);
+  const earthshineIntensity = 0.035 * Math.pow(1 - fraction, 2.3);
+  const limbAngle = illumination.angle - moonPos.parallacticAngle;
+  const inPlane = Math.sin(phaseAngle);
+  const lightDistance = 10;
+
+  return {
+    phase: illumination.phase,
+    fraction,
+    phaseName: currentPhase.phase,
+    emoji: currentPhase.emoji,
+    distance: Math.round(moonPos.distance).toLocaleString('sv-SE'),
+    nextFullMoon: nextFullMoon(date),
+    earthshineIntensity,
+    light: new THREE.Vector3(
+      -Math.sin(limbAngle) * inPlane * lightDistance,
+      Math.cos(limbAngle) * inPlane * lightDistance,
+      Math.cos(phaseAngle) * lightDistance,
+    ),
+  };
+}
+
 export default function CurrentMoonPhase3D() {
   const mountRef = useRef<HTMLDivElement | null>(null);
+  const moonInfoRef = useRef<MoonInfo>(buildMoonInfo(new Date()));
   const [now, setNow] = useState(() => new Date());
 
   useEffect(() => {
@@ -148,40 +192,18 @@ export default function CurrentMoonPhase3D() {
     return () => window.clearInterval(timer);
   }, []);
 
-  const moonInfo = useMemo(() => {
-    const illumination = getMoonIllumination(now);
-    const moonPos = getMoonPosition(now, STOCKHOLM_LAT, STOCKHOLM_LON);
-    const phaseAge = Number(illumination.phase.toFixed(2));
-    const currentPhase = moonPhases.find((phase) => phaseAge >= phase.start && phaseAge < phase.end) ?? moonPhases[0];
-    const fraction = Math.min(1, Math.max(0, illumination.fraction));
-    const phaseAngle = Math.acos(2 * fraction - 1);
-    const earthshineIntensity = 0.12 * Math.pow(1 - fraction, 2.3);
-    const limbAngle = illumination.angle - moonPos.parallacticAngle;
-    const inPlane = Math.sin(phaseAngle);
-    const lightDistance = 10;
+  const moonInfo = useMemo(() => buildMoonInfo(now), [now]);
 
-    return {
-      phase: illumination.phase,
-      fraction,
-      phaseName: currentPhase.phase,
-      emoji: currentPhase.emoji,
-      distance: Math.round(moonPos.distance).toLocaleString('sv-SE'),
-      nextFullMoon: nextFullMoon(now),
-      earthshineIntensity,
-      light: new THREE.Vector3(
-        -Math.sin(limbAngle) * inPlane * lightDistance,
-        Math.cos(limbAngle) * inPlane * lightDistance,
-        Math.cos(phaseAngle) * lightDistance,
-      ),
-    };
-  }, [now]);
+  useEffect(() => {
+    moonInfoRef.current = moonInfo;
+  }, [moonInfo]);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(CAMERA_FOV_DEG, 1, 0.1, 1200);
+    const camera = new THREE.PerspectiveCamera(CAMERA_FOV_DEG, 1, 0.1, 1600);
     camera.position.z = getCameraDistance();
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -190,7 +212,6 @@ export default function CurrentMoonPhase3D() {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.15;
     renderer.setClearColor(0x000000, 0);
-    renderer.setSize(mount.clientWidth, mount.clientHeight);
     mount.appendChild(renderer.domElement);
 
     const textureLoader = new THREE.TextureLoader();
@@ -212,8 +233,8 @@ export default function CurrentMoonPhase3D() {
       bumpScale: MOON_BUMP_SCALE,
       roughness: 1,
       metalness: 0,
-      emissive: new THREE.Color(0xd7d7dd),
-      emissiveIntensity: moonInfo.earthshineIntensity,
+      emissive: new THREE.Color(0x332f3d),
+      emissiveIntensity: moonInfoRef.current.earthshineIntensity,
     });
 
     material.onBeforeCompile = (shader) => {
@@ -245,20 +266,26 @@ export default function CurrentMoonPhase3D() {
     };
 
     const moon = new THREE.Mesh(geometry, material);
+    moon.rotation.set(
+      degToRad(DEFAULT_ROT_X_DEG),
+      MOON_BASE_ROTATION_Y + degToRad(DEFAULT_ROT_Y_DEG),
+      degToRad(DEFAULT_ROT_Z_DEG),
+    );
     scene.add(moon);
 
     const light = new THREE.DirectionalLight(0xffffff, LIGHT_INTENSITY);
-    light.position.copy(moonInfo.light);
+    light.position.copy(moonInfoRef.current.light);
+    light.target.position.set(0, 0, 0);
     scene.add(light.target);
     scene.add(light);
 
-    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.008);
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, HEMISPHERE_LIGHT_INTENSITY);
     hemiLight.color.setHSL(0.6, 1, 0.6);
     hemiLight.groundColor.setHSL(0.095, 1, 0.75);
     scene.add(hemiLight);
 
     const stars = new THREE.BufferGeometry();
-    const starCount = 260;
+    const starCount = 220;
     const positions = new Float32Array(starCount * 3);
     for (let i = 0; i < starCount; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 7;
@@ -266,21 +293,23 @@ export default function CurrentMoonPhase3D() {
       positions[i * 3 + 2] = -Math.random() * 3 - 1;
     }
     stars.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.007, transparent: true, opacity: 0.72 });
+    const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.006, transparent: true, opacity: 0.58 });
     const starField = new THREE.Points(stars, starMaterial);
     scene.add(starField);
 
     let frame = 0;
     const animate = () => {
       frame = requestAnimationFrame(animate);
-      light.position.copy(moonInfo.light);
-      material.emissiveIntensity = moonInfo.earthshineIntensity;
+      const current = moonInfoRef.current;
+      light.position.copy(current.light);
+      light.target.updateMatrixWorld();
+      material.emissiveIntensity = current.earthshineIntensity;
       moon.rotation.set(
         degToRad(DEFAULT_ROT_X_DEG),
         MOON_BASE_ROTATION_Y + degToRad(DEFAULT_ROT_Y_DEG),
         degToRad(DEFAULT_ROT_Z_DEG),
       );
-      starField.rotation.z += 0.00025;
+      starField.rotation.z += 0.0002;
       renderer.render(scene, camera);
     };
 
@@ -310,7 +339,7 @@ export default function CurrentMoonPhase3D() {
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, [moonInfo.light, moonInfo.earthshineIntensity]);
+  }, []);
 
   return (
     <section className={styles.moonPanel} aria-label='Aktuell månfas'>
