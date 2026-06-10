@@ -123,7 +123,7 @@
   min-height: 100svh;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  padding: clamp(5.8rem, 8vw, 7.8rem) clamp(1rem, 4vw, 4rem) clamp(1.2rem, 3vw, 2.4rem);
+  padding: clamp(5.8rem, 8vw, 7.8rem) .25rem clamp(1.2rem, 3vw, 2.4rem);
 }
 
 .kicker {
@@ -156,32 +156,38 @@
 .kicker::after { background: var(--moon); box-shadow: 0 0 18px var(--moon-soft); }
 
 .slider {
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   height: 100%;
   display: flex;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  margin-left: calc(-1 * clamp(1rem, 4vw, 4rem));
-  padding: 0 clamp(1rem, 4vw, 4rem);
+  margin: 0;
+  padding: 0;
   scrollbar-width: none;
+  box-sizing: border-box;
 }
 .slider::-webkit-scrollbar { display: none; }
 
 .slide {
   scroll-snap-align: center;
   flex: 0 0 100%;
+  width: 100%;
   min-width: 100%;
+  max-width: 100%;
   min-height: 0;
   display: grid;
   place-items: center;
-  padding: clamp(1.5rem, 4vw, 3rem) 0;
+  padding: clamp(1.5rem, 4vw, 3rem) .25rem;
   perspective: 1200px;
 }
 
 .card {
-  width: min(920px, 100%);
+  width: min(940px, calc(100vw - .5rem));
+  max-width: calc(100vw - .5rem);
+  box-sizing: border-box;
   max-height: min(68svh, 760px);
   position: relative;
   overflow: hidden;
@@ -224,10 +230,10 @@
 
 .poemTitle {
   margin: 0 0 clamp(1rem, 2vw, 1.65rem);
-  font-family: var(--font-cormorant), Georgia, serif;
-  font-size: clamp(2.1rem, 6vw, 6rem);
-  font-weight: 700;
-  font-style: italic;
+  font-family: var(--font-parisienne), var(--font-cormorant), Georgia, serif;
+  font-size: clamp(3rem, 7vw, 7.2rem);
+  font-weight: 400;
+  font-style: normal;
   letter-spacing: -.045em;
   line-height: .96;
   text-align: center;
@@ -424,10 +430,22 @@
     font-size: .62rem;
   }
 
+  .hero {
+    padding-left: .25rem;
+    padding-right: .25rem;
+  }
+
+  .slide {
+    padding-left: .25rem;
+    padding-right: .25rem;
+  }
+
   .card {
-    max-height: 66svh;
-    padding: 1.35rem 1rem 1.5rem;
-    border-radius: 1.45rem;
+    width: calc(100vw - .5rem);
+    max-width: calc(100vw - .5rem);
+    max-height: 70svh;
+    padding: 1.25rem .9rem 1.35rem;
+    border-radius: 1.25rem;
   }
 
   .poemText {
@@ -438,7 +456,7 @@
   }
 
   .poemTitle {
-    font-size: clamp(2rem, 12vw, 3.9rem);
+    font-size: clamp(3.1rem, 17vw, 5.2rem);
     text-align: left;
   }
 

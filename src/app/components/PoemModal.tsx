@@ -93,7 +93,7 @@ export default function PoemModal({
               </button>
               <button
                 type='submit'
-                className='rounded-full bg-gradient-to-r from-[#fff0c4] via-[#ffb15f] to-[#c8b9ff] px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-[#110716] shadow-[0_18px_50px_rgba(255,177,95,.25)] transition hover:-translate-y-0.5'
+                className='rounded-full bg-gradient-to-r from-[#fff0c4] via-[#ffb15f] to-[#c8b9ff] px-5 py-3 text-sm font-bold uppercase tracking-[0.16em] text-[#110716] shadow-[0_18px_50px_rgba(255,177,95,.25)] transition'
               >
                 Save poem
               </button>

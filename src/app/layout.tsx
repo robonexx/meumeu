@@ -1,4 +1,4 @@
-import { Cormorant_Garamond, Space_Grotesk } from 'next/font/google';
+import { Cormorant_Garamond, Space_Grotesk, Parisienne } from 'next/font/google';
 import './globals.css';
 import Nav from './components/Nav';
 import ClientAuthWrapper from './client-auth-wrapper';
@@ -18,10 +18,17 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
+const parisienne = Parisienne({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-parisienne',
+  display: 'swap',
+});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang='en'>
-      <body className={`${cormorant.variable} ${spaceGrotesk.variable} antialiased`}>
+      <body className={`${cormorant.variable} ${spaceGrotesk.variable} ${parisienne.variable} antialiased`}>
         <Nav />
         <ClientAuthWrapper>{children}</ClientAuthWrapper>
       </body>
