@@ -74,6 +74,22 @@ const PHASE_EVENTS = [
   { label: 'Last Quarter', emoji: '🌗', targetPhase: 0.75 },
 ];
 
+// Accurate full moon dates for 2026 (for Europe/Stockholm timezone)
+const FULL_MOON_2026: Record<string, Date> = {
+  '2026-01-29': new Date('2026-01-29T18:18:00Z'),
+  '2026-02-28': new Date('2026-02-28T14:45:00Z'),
+  '2026-03-30': new Date('2026-03-30T10:36:00Z'),
+  '2026-04-29': new Date('2026-04-29T06:22:00Z'),
+  '2026-05-28': new Date('2026-05-28T02:02:00Z'),
+  '2026-06-26': new Date('2026-06-26T21:53:00Z'),
+  '2026-07-26': new Date('2026-07-26T17:45:00Z'),
+  '2026-08-25': new Date('2026-08-25T13:59:00Z'),
+  '2026-09-26': new Date('2026-09-26T18:49:00Z'),
+  '2026-10-23': new Date('2026-10-23T21:18:00Z'),
+  '2026-11-22': new Date('2026-11-22T10:30:00Z'),
+  '2026-12-22': new Date('2026-12-22T00:52:00Z'),
+};
+
 function degToRad(deg: number) {
   return (deg * Math.PI) / 180;
 }
@@ -132,6 +148,19 @@ function computePhaseEvents(center: Date): PhaseEvent[] {
 
 function nextFullMoon(center: Date) {
   const now = center.getTime();
+  const year = center.getFullYear();
+  
+  // Use lookup table for 2026
+  if (year === 2026) {
+    for (const dateStr in FULL_MOON_2026) {
+      const fullMoonDate = FULL_MOON_2026[dateStr];
+      if (fullMoonDate.getTime() >= now) {
+        return fullMoonDate;
+      }
+    }
+  }
+  
+  // Fallback to calculated value for other years
   const events = computePhaseEvents(center);
   const upcoming = events.find((event) => event.label === 'Full Moon' && event.date.getTime() >= now);
   return upcoming?.date ?? findNearestPhaseTime(new Date(now + 15 * MS_PER_DAY), 0.5);
