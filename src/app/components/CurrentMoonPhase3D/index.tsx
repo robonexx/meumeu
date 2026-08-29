@@ -143,7 +143,7 @@ function formatDateTime(date: Date, includeTime = false) {
     year: 'numeric',
     month: 'long',
     day: '2-digit',
-    ...(includeTime ? { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' } : {}),
+    ...(includeTime ? { hour: '2-digit', minute: '2-digit' } : {}),
   }).format(date);
 }
 
