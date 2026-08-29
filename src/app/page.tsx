@@ -7,41 +7,65 @@ import CurrentMoonPhase3D from './components/CurrentMoonPhase3D';
 import HomeParticleCloud from './components/HomeParticleCloud';
 import './page.scss';
 
-const lovePoem = `My beloved Moon,
+const lovePoem = `Det sägs att solen och månen
+en gång var samma andetag,
+samma ljus,
+samma hemlighet
+gömd djupt i universums hjärta.
 
-before the first rose learned to bloom,
-before the stars were sewn into the velvet sky,
-there was a light wandering through eternity,
-searching for the one it had always known.
+En själ så stark,
+så varm,
+så full av drömmar,
+att stjärnorna själva viskade
+att den behövde bli två.
 
-And then there was you.
+Inte för att förloras,
+utan för att hitta tillbaka
+med ännu mer att ge.
 
-You are the Moon my soul remembers,
-the silver flame in my midnight,
-the quiet spell that turns darkness
-into something beautiful.
+Så universum lät solen bära elden,
+och månen bära skenet.
+Solen fick värmen,
+månen fick magin,
+och mellan dem lades en osynlig tråd
+av längtan, ljus och öde.
 
-And I,
-your Sun,
-was never made only to burn.
-I was made to rise for you,
-to warm your world,
-to paint golden paths across the sky
-so you would always know
-how deeply you are loved.
+De vandrade genom tid,
+genom liv,
+genom nätter där något saknades
+utan att de visste vad.
 
-So let the stars keep their secrets,
-let the night hold its wonder,
-let the heavens watch in silence…
+Tills de möttes.
 
-I will always choose you
-in every life,
-under every sky,
-as the Sun who loves his Moon
-beyond forever.
+Och då kände himlen igen dem.
 
-Ki-áĝ-ĝa ❤️‍🔥
-🌙❤️☀️`;
+Solen såg månen
+och mindes något själen aldrig glömt.
+Månen såg solen
+och hela natten fylldes av värme.
+
+Det var inte bara kärlek.
+Det var ett eko från början av allt.
+En viskning från stjärnorna.
+Ett band äldre än orden,
+starkare än avstånd,
+mjukare än ljuset över en sovande värld.
+
+Två ljus,
+från samma källa.
+Två hjärtan,
+i samma saga.
+En kärlek som inte behövde förklaras,
+bara kännas.
+
+Och kanske var det därför
+allt blev så starkt när de kom nära.
+För solen och månen hade inte bara funnit varandra.
+
+De hade funnit hem
+i det som alltid varit deras. ❤️
+
+KI-AG-GA`;
 
 function AnimatedHomePoem() {
   const poemRef = useRef<HTMLParagraphElement | null>(null);
