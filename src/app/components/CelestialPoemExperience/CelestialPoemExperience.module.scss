@@ -86,7 +86,7 @@
   translate: -50% -50%;
   border: 1px solid rgba(255,255,255,.10);
   border-radius: 50%;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
   box-shadow: inset 0 0 48px rgba(255,255,255,.04), 0 0 120px rgba(157,130,255,.08);
   animation: orbitPulse 8s ease-in-out infinite;
@@ -196,18 +196,19 @@
   height: 100%;
   max-height: min(70dvh, 730px);
   position: relative;
+  z-index: 2;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--glass-border);
   border-radius: clamp(1.45rem, 3vw, 2.7rem);
   background:
-    linear-gradient(145deg, rgba(255,255,255,.15), rgba(255,255,255,.035)),
-    linear-gradient(135deg, rgba(255,179,92,.11), rgba(161,134,255,.12));
+    linear-gradient(145deg, rgba(12, 9, 18, 0.82), rgba(8, 6, 16, 0.52)),
+    linear-gradient(135deg, rgba(255,179,92,.07), rgba(161,134,255,.08));
   box-shadow:
-    0 30px 100px rgba(0,0,0,.40),
-    inset 0 1px 0 rgba(255,255,255,.24);
-  backdrop-filter: blur(22px) saturate(1.2);
+    0 30px 100px rgba(0,0,0,.44),
+    inset 0 1px 0 rgba(255,255,255,.20);
+  backdrop-filter: blur(22px) saturate(1.1);
   padding: clamp(1.55rem, 4.4vw, 4.65rem);
   transform-style: preserve-3d;
 }
