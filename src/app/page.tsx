@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import CurrentMoonPhase3D from './components/CurrentMoonPhase3D';
+import HomeParticleCloud from './components/HomeParticleCloud';
 import './page.scss';
 
 const lovePoem = `My beloved Moon,
@@ -99,6 +100,7 @@ export default function Home() {
       </div>
       <div className='homeAurora' aria-hidden='true' />
       <div className='homeStars' aria-hidden='true' />
+      <HomeParticleCloud />
 
       <section className='homeHero'>
         <motion.div

@@ -51,6 +51,15 @@
   animation: homeStars 40s linear infinite;
 }
 
+.homeParticleCloud {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .9;
+  filter: blur(1.4px) saturate(1.2);
+}
+
 .homeHero {
   min-height: 100svh;
   width: 100%;
