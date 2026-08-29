@@ -154,6 +154,28 @@ export default function HomeParticleCloud() {
       spawnSpark(event.clientX, event.clientY);
     };
 
+    const handleTouchBurst = (event: TouchEvent) => {
+      if (window.innerWidth >= 760) return;
+
+      const touch = event.touches[0] ?? event.changedTouches[0];
+      if (!touch) return;
+
+      const burstCount = 24;
+      for (let i = 0; i < burstCount; i += 1) {
+        const angle = (Math.PI * 2 * i) / burstCount;
+        const force = 0.7 + Math.random() * 0.9;
+        sparks.push({
+          x: touch.clientX,
+          y: touch.clientY,
+          vx: Math.cos(angle) * force,
+          vy: Math.sin(angle) * force - 0.4,
+          life: 24 + Math.random() * 26,
+          size: 1 + Math.random() * 2.4,
+          alpha: 0.45 + Math.random() * 0.5,
+        });
+      }
+    };
+
     const resize = () => {
       dpr = window.devicePixelRatio || 1;
       width = window.innerWidth;
@@ -170,6 +192,7 @@ export default function HomeParticleCloud() {
     resize();
     window.addEventListener('resize', resize);
     window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('touchstart', handleTouchBurst, { passive: true });
 
     const getRevealProgress = () => {
       const section = document.querySelector('.homeLoveSection');
@@ -280,6 +303,7 @@ export default function HomeParticleCloud() {
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('touchstart', handleTouchBurst);
       canvas.remove();
     };
   }, []);
